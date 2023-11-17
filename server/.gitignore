@@ -1,0 +1,14 @@
+# misc
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+ 
+# Specific to macOS and contains metadata about the folder
+.DS_Store
+
+### VisualStudioCode template
+.vscode/
+
+### Flask.Python Stack ###
+__pycache__/
