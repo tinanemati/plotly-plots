@@ -14,6 +14,7 @@ export default function Heatmap({ updatexData, updateyData }) {
   const [prevYRange, setPrevYRange] = useState(null);
   const [minLimit, setMinLimit] = useState(null);
   const [maxLimit, setMaxLimit] = useState(null);
+  const updateZ = false;
 
   console.log("this is the state of zmin and zmax:", zMin, zMax);
   console.log(
@@ -122,17 +123,30 @@ export default function Heatmap({ updatexData, updateyData }) {
     console.log("new Y Range:", newYRange);
 
     if (prevXRange && prevYRange) {
-      // Check if the new range is smaller (zoomed in) compared to the previous range
+      // Check if the new start of the range is bigger (zoomed in) compared to the previous start of the range
       const isZoomInX = newXRange[0] > prevXRange[0];
       const isZoomInY = newYRange[0] > prevYRange[0];
-
-      if (isZoomInX && isZoomInY) {
-        // Increment zMin only on zoom-in events
-        console.log("I am increasing");
-        setZMin((prevZMin) => Math.min(maxLimit, prevZMin + 1000));
+      // Check whether we have to update "zmin" or "zmax"
+      if (updateZ) {
+        console.log("we need to update zMin");
+        if (isZoomInX && isZoomInY) {
+          // Increment zMin only on zoom-in events
+          console.log("I am increasing zMin");
+          setZMin((prevZMin) => Math.min(maxLimit, prevZMin + 1000));
+        } else {
+          console.log("I am decreasing zMin");
+          setZMin((prevZMin) => Math.max(minLimit, prevZMin - 1000));
+        }
       } else {
-        console.log("I am decreasing");
-        setZMin((prevZMin) => Math.max(minLimit, prevZMin - 1000));
+        console.log("we need to update zMax");
+        if (isZoomInX && isZoomInY) {
+          // Increment zMin only on zoom-in events
+          console.log("I am increasing zMax");
+          setZMax((prevZMax) => Math.min(maxLimit, prevZMax + 1000));
+        } else {
+          console.log("I am decreasing zMax");
+          setZMax((prevZMax) => Math.max(minLimit, prevZMax - 1000));
+        }
       }
     }
   };
@@ -187,8 +201,8 @@ export default function Heatmap({ updatexData, updateyData }) {
             },
           ],
           modebar: {
-            remove: ["pan", "toImage", "zoom", "autoscale", "resetscale"]
-          }
+            remove: ["pan", "toImage", "autoscale", "zoom", "resetscale"],
+          },
         }}
         onHover={handleHover}
         onClick={handleClick}
