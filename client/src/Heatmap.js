@@ -136,6 +136,7 @@ export default function Heatmap({ updatexData, updateyData }) {
       }
     }
   };
+
   return (
     <>
       <Plot
@@ -185,6 +186,9 @@ export default function Heatmap({ updatexData, updateyData }) {
               },
             },
           ],
+          modebar: {
+            remove: ["pan", "toImage", "zoom", "autoscale", "resetscale"]
+          }
         }}
         onHover={handleHover}
         onClick={handleClick}
