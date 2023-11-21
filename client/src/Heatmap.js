@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
 import data from "./sample-data.json";
+import Heatmapconfig from "./PlotConfig/Heatmapconfig";
 
 export default function Heatmap({ updatexData, updateyData }) {
   const [arrayX, setArrayX] = useState([]);
@@ -14,19 +15,23 @@ export default function Heatmap({ updatexData, updateyData }) {
   const [prevYRange, setPrevYRange] = useState(null);
   const [minLimit, setMinLimit] = useState(null);
   const [maxLimit, setMaxLimit] = useState(null);
-  const updateZ = false;
+  const [configValue, setConfigValue] = useState("");
+  const updateConfigValue = (newValue) => {
+    setConfigValue(newValue)
+  }
 
+  console.log("this is the configValue:", configValue)
   console.log("this is the state of zmin and zmax:", zMin, zMax);
-  console.log(
-    "this is the state of minLimit and maxLimit:",
-    minLimit,
-    maxLimit
-  );
-  console.log(
-    "this is the state of prevXRange and prevYRange:",
-    prevXRange,
-    prevYRange
-  );
+  // console.log(
+  //   "this is the state of minLimit and maxLimit:",
+  //   minLimit,
+  //   maxLimit
+  // );
+  // console.log(
+  //   "this is the state of prevXRange and prevYRange:",
+  //   prevXRange,
+  //   prevYRange
+  // );
 
   // Calculate zmin and zmax from arrayZ data
   useEffect(() => {
@@ -109,6 +114,7 @@ export default function Heatmap({ updatexData, updateyData }) {
   };
 
   const handleZoom = (event) => {
+    console.log("i am in handle zoom:", event)
     // Extract x-axis and y-axis ranges from the event object
     const xMin = parseFloat(event["xaxis.range[0]"]);
     const xMax = parseFloat(event["xaxis.range[1]"]);
@@ -127,7 +133,7 @@ export default function Heatmap({ updatexData, updateyData }) {
       const isZoomInX = newXRange[0] > prevXRange[0];
       const isZoomInY = newYRange[0] > prevYRange[0];
       // Check whether we have to update "zmin" or "zmax"
-      if (updateZ) {
+      if (configValue === "Update zMin") {
         console.log("we need to update zMin");
         if (isZoomInX && isZoomInY) {
           // Increment zMin only on zoom-in events
@@ -137,7 +143,7 @@ export default function Heatmap({ updatexData, updateyData }) {
           console.log("I am decreasing zMin");
           setZMin((prevZMin) => Math.max(minLimit, prevZMin - 1000));
         }
-      } else {
+      } else if (configValue === "Update zMax") {
         console.log("we need to update zMax");
         if (isZoomInX && isZoomInY) {
           // Increment zMin only on zoom-in events
@@ -147,12 +153,26 @@ export default function Heatmap({ updatexData, updateyData }) {
           console.log("I am decreasing zMax");
           setZMax((prevZMax) => Math.max(minLimit, prevZMax - 1000));
         }
+      } else {
+        console.log("go back to default:", minLimit, maxLimit)
+        setZMin(minLimit)
+        setZMax(maxLimit)
       }
     }
   };
+  
+  const handleAxis = (event) => {
+    console.log("i am in auto size:", event)
+    console.log("go back to default:", minLimit, maxLimit)
+    setZMin(minLimit)
+    setZMax(maxLimit)
+  }
+
+  const relayoutEvent = configValue === "Reset" ? handleAxis : handleZoom;
 
   return (
-    <>
+    <div className="Heatmap-style" style={{display: "flex", alignItems: "center"}}> 
+      <Heatmapconfig configValue={configValue} updateConfigValue={updateConfigValue}/> 
       <Plot
         data={[
           {
@@ -208,8 +228,8 @@ export default function Heatmap({ updatexData, updateyData }) {
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         config={{ scrollZoom: true, displaylogo: false }} // Enable scroll zoom
-        onRelayout={handleZoom}
+        onRelayout={relayoutEvent}
       />
-    </>
+    </div>
   );
 }

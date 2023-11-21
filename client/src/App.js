@@ -21,7 +21,6 @@ export default function App() {
   // const updatezData = (newData) => {
   //   setZdata(newData);
   // };
-  
 
   /* Testing
   console.log("this is my xData for line plotL: ", xData)
@@ -31,6 +30,7 @@ export default function App() {
   return (
     <div>
       <h1>Test Heatmap Components</h1>
+
       <Heatmap
         updatexData={updatexData}
         updateyData={updateyData}
@@ -38,6 +38,7 @@ export default function App() {
         // updatey1Data={updatey1Data}
       />
       <LinePlot xData={xData} yData={yData} />
+
       {/* <Histogram zData={zData} /> */}
     </div>
   );
