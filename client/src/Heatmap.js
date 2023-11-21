@@ -113,63 +113,8 @@ export default function Heatmap({ updatexData, updateyData }) {
     return { xRange: [xMin, xMax], yRange: [yMin, yMax] };
   };
 
-  const handleZoom = (event) => {
-    console.log("i am in handle zoom:", event);
-    // Extract x-axis and y-axis ranges from the event object
-    const xMin = parseFloat(event["xaxis.range[0]"]);
-    const xMax = parseFloat(event["xaxis.range[1]"]);
-    const yMin = parseFloat(event["yaxis.range[0]"]);
-    const yMax = parseFloat(event["yaxis.range[1]"]);
-
-    // Convert string values to numbers if needed
-    const newXRange = [xMin, xMax];
-    const newYRange = [yMax, yMin];
-    // Calculate x and y ranges
-    console.log("new X Range:", newXRange);
-    console.log("new Y Range:", newYRange);
-
-    if (prevXRange && prevYRange) {
-      // Check if the new start of the range is bigger (zoomed in) compared to the previous start of the range
-      const isZoomInX = newXRange[0] > prevXRange[0];
-      const isZoomInY = newYRange[0] > prevYRange[0];
-      // Check whether we have to update "zmin" or "zmax"
-      if (configValue === "Update zMin") {
-        console.log("we need to update zMin");
-        if (isZoomInX && isZoomInY) {
-          // Increment zMin only on zoom-in events
-          console.log("I am increasing zMin", zMin);
-          setZMin((prevZMin) => Math.min(maxLimit, prevZMin + 1000));
-        } else {
-          console.log("I am decreasing zMin", zMin);
-          setZMin((prevZMin) => Math.max(minLimit, prevZMin - 1000));
-        }
-      } else if (configValue === "Update zMax") {
-        console.log("we need to update zMax");
-        if (isZoomInX && isZoomInY) {
-          // Increment zMin only on zoom-in events
-          console.log("I am increasing zMax", zMax);
-          setZMax((prevZMax) => Math.min(maxLimit, prevZMax + 1000));
-        } else {
-          console.log("I am decreasing zMax", zMax);
-          setZMax((prevZMax) => Math.max(minLimit, prevZMax - 1000));
-        }
-      } else {
-        console.log("go back to default:", minLimit, maxLimit);
-        // setZMin(minLimit)
-        // setZMax(maxLimit)
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (configValue === "Reset") {
-      setZMax(maxLimit);
-      setZMin(minLimit);
-    }
-  }, [configValue]);
-
   const handleWheel = (event) => {
-    console.log("this is my event:", event);
+    //console.log("this is my event:", event);
     if (event.deltaY < 0 && configValue === "Update zMin") {
       // zoom-in
 
@@ -193,15 +138,20 @@ export default function Heatmap({ updatexData, updateyData }) {
     }
   };
   useEffect(() => {
-    const cancelWheel = (event) => event.preventDefault();
+    if (configValue === "Reset") {
+      setZMax(maxLimit);
+      setZMin(minLimit);
+    } else if (configValue === "Update zMax" || configValue === "Update zMin") {
+      const cancelWheel = (event) => event.preventDefault();
 
-    document.body.addEventListener("wheel", cancelWheel, { passive: false });
+      document.body.addEventListener("wheel", cancelWheel, { passive: false });
 
-    return () => {
-      document.body.removeEventListener("wheel", cancelWheel);
-    };
-  }, []);
-  
+      return () => {
+        document.body.removeEventListener("wheel", cancelWheel);
+      };
+    }
+  }, [configValue]);
+
   return (
     <div
       className="Heatmap-style"
@@ -271,7 +221,6 @@ export default function Heatmap({ updatexData, updateyData }) {
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         config={{ displaylogo: false }} // Enable scroll zoom
-        //onRelayout={handleZoom}
       />
     </div>
   );
