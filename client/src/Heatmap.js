@@ -163,15 +163,40 @@ export default function Heatmap({ updatexData, updateyData }) {
 
   useEffect(() => {
     if (configValue === "Reset") {
-      setZMax(maxLimit)
-      setZMin(minLimit)
+      setZMax(maxLimit);
+      setZMin(minLimit);
     }
-  },[configValue])
- 
+  }, [configValue]);
+
+  const handleWheel = (event) => {
+    if (event.deltaY < 0 && configValue === "Update zMin") {
+      // zoom-in
+
+      // Increment zMin only on zoom-in events
+      console.log("scrolling up");
+      console.log("I am increasing zMin", zMin);
+      setZMin((prevZMin) => Math.min(maxLimit, prevZMin + 1000));
+    } else if (event.deltaY > 0 && configValue === "Update zMin") {
+      //zoom-out
+      // decremeant zMin only on zoom-in events
+      console.log("I am decreasing zMin", zMin);
+      setZMin((prevZMin) => Math.max(minLimit, prevZMin - 1000));
+      console.log("scrolling down");
+    } else if (event.deltaY < 0 && configValue === "Update zMax") {
+      console.log("I am increasing zMax", zMax);
+      setZMax((prevZMax) => Math.min(maxLimit, prevZMax + 1000));
+    } else if (event.deltaY > 0 && configValue === "Update zMax") {
+      //zoom-out
+      console.log("I am decreasing zMax", zMax);
+      setZMax((prevZMax) => Math.max(minLimit, prevZMax - 1000));
+    }
+  };
+
   return (
     <div
       className="Heatmap-style"
-      style={{ display: "flex", alignItems: "center" }}
+      style={{ display: "flex", alignItems: "center", overflow: "hidden" }}
+      onWheel={handleWheel}
     >
       <Heatmapconfig
         configValue={configValue}
@@ -231,8 +256,8 @@ export default function Heatmap({ updatexData, updateyData }) {
         onHover={handleHover}
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
-        config={{ scrollZoom: true, displaylogo: false }} // Enable scroll zoom
-        onRelayout={handleZoom}
+        config={{ displaylogo: false }} // Enable scroll zoom
+        //onRelayout={handleZoom}
       />
     </div>
   );
