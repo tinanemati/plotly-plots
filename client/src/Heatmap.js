@@ -169,6 +169,7 @@ export default function Heatmap({ updatexData, updateyData }) {
   }, [configValue]);
 
   const handleWheel = (event) => {
+    console.log("this is my event:", event);
     if (event.deltaY < 0 && configValue === "Update zMin") {
       // zoom-in
 
@@ -191,11 +192,24 @@ export default function Heatmap({ updatexData, updateyData }) {
       setZMax((prevZMax) => Math.max(minLimit, prevZMax - 1000));
     }
   };
+  useEffect(() => {
+    const cancelWheel = (event) => event.preventDefault();
 
+    document.body.addEventListener("wheel", cancelWheel, { passive: false });
+
+    return () => {
+      document.body.removeEventListener("wheel", cancelWheel);
+    };
+  }, []);
+  
   return (
     <div
       className="Heatmap-style"
-      style={{ display: "flex", alignItems: "center", overflow: "hidden" }}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        overscrollBehavior: "contain",
+      }}
       onWheel={handleWheel}
     >
       <Heatmapconfig
