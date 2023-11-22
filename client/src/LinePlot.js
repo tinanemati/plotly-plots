@@ -3,7 +3,7 @@ import Plot from "react-plotly.js";
 import Lineplotconfig from "./PlotConfig/Lineplotconfig";
 
 export default function LinePlot({ xData, yData }) {
-  const [configValue, setConfigValue] = useState("");
+  const [configValue, setConfigValue] = useState("Standard");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
   };
