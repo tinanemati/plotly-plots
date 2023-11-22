@@ -25,6 +25,7 @@ export default function LinePlot({ xData, yData }) {
       setHoverActive(false)
       setLeftside(0)
       setRightside(0)
+      setClickCount(0)
     } else {
       setHoverActive(false)
     }
@@ -34,7 +35,7 @@ export default function LinePlot({ xData, yData }) {
   const dragMode = configValue === "Standard" ? "pan" : false;
 
   const handleHover = (data) => {
-    if (hoverActive) {
+    if (hoverActive && clickCount < 2) {
       const hoverPointIndex = data.points[0].pointIndex;
       const xValue = xData[hoverPointIndex];
       console.log(
