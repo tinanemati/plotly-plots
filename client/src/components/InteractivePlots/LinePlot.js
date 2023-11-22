@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import Lineplotconfig from "./PlotConfig/Lineplotconfig";
+import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 
 export default function LinePlot({ xData, yData }) {
   const [configValue, setConfigValue] = useState("Standard");

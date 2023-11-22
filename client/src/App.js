@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Heatmap from "./Heatmap";
-import LinePlot from "./LinePlot";
+import Heatmap from "./components/InteractivePlots/Heatmap";
+import LinePlot from "./components/InteractivePlots/LinePlot";
 
 export default function App() {
   const [xData, setXdata] = useState([]);

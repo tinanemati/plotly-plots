@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import data from "./sample-data.json";
-import Heatmapconfig from "./PlotConfig/Heatmapconfig";
+import data from "../../sample-data.json"
+import Heatmapconfig from "../PlotConfig/Heatmapconfig";
 
 export default function Heatmap({ updatexData, updateyData }) {
   const [arrayX, setArrayX] = useState([]);

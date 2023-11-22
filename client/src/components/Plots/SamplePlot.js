@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Plot from "react-plotly.js";
 
 export default function SamplePlot() {
-  const [arrayX, setArrayX] = useState([1, 2, 3]);
-  const [arrayY, setArrayY] = useState([2, 6, 3]);
+  const arrayX = [1, 2, 3];
+  const arrayY = [2, 6, 3];
 
   return (
     <Plot
