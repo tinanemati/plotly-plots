@@ -20,6 +20,18 @@ export default function LinePlot({ xData, yData }) {
   const scrollZoom = configValue === "Standard" ? true : false;
   const dragMode = configValue === "Standard" ?  "pan" : false;
 
+  const handleHover = (data) => {
+    console.log("I am in the hover mode with this data:", data)
+    console.log("onHover", data.points[0], "testing finding x using pointIndex:", xData[data.points[0].pointIndex])
+    // if (hoverActive) {
+    //   const clickedPointIndex = data.points[0].pointIndex[0];
+    //   const yValue = arrayY[clickedPointIndex]; // Get the y-axis value where the user clicked
+    //   setHorizontalLinePosition(yValue);
+    //   updateyData(arrayZ[clickedPointIndex]);
+     
+    //}
+  };
+
   return (
     <div
       className="lineplot-style"
@@ -41,19 +53,19 @@ export default function LinePlot({ xData, yData }) {
             mode: "lines+markers",
             marker: { color: "#6ECEB2" },
           },
-          {
-            x: xData.slice(0, xData.length + 1),
-            y: yData.slice(
-              0,
-              xData.length + 1
-            ),
-            fill: "tozeroy",
-            fillcolor: "#97ccc8",
-            type: "scatter",
-            line: {
-              color: "#1975d2"
-            },
-          },
+          // {
+          //   x: xData.slice(0, xData.length + 1),
+          //   y: yData.slice(
+          //     0,
+          //     xData.length + 1
+          //   ),
+          //   fill: "tozeroy",
+          //   fillcolor: "#97ccc8",
+          //   type: "scatter",
+          //   line: {
+          //     color: "#1975d2"
+          //   },
+          // },
         ]}
         layout={{
           width: 950,
@@ -68,6 +80,7 @@ export default function LinePlot({ xData, yData }) {
           dragmode: dragMode
         }}
         config={{ scrollZoom: scrollZoom, displaylogo: false, displayModeBar: false }}
+        onHover={handleHover}
       />
     </div>
   );
