@@ -21,7 +21,7 @@ export default function App() {
   */
   return (
     <div>
-      <h1>Test Heatmap Components</h1>
+      <h1 style={{display:"flex", justifyContent: "center"}}>Test Interactive Plots</h1>
 
       <Heatmap updatexData={updatexData} updateyData={updateyData} />
       <LinePlot xData={xData} yData={yData} />
