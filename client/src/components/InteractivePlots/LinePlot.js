@@ -19,8 +19,12 @@ export default function LinePlot({ xData, yData }) {
       setHoverActive(true);
     } else if (configValue === "Baseline") {
       console.log("this is where we have to apply the baseline logic");
+      setHoverActive(false)
     } else if (configValue === "Reset") {
       console.log("this is where we will apply the reset logic");
+      setHoverActive(false)
+    } else {
+      setHoverActive(false)
     }
   }, [configValue]);
 
