@@ -20,8 +20,8 @@ export default function Heatmap({ updatexData, updateyData }) {
     setConfigValue(newValue);
   };
 
-  console.log("this is the configValue:", configValue);
-  console.log("this is the state of zmin and zmax:", zMin, zMax);
+  //console.log("this is the configValue:", configValue);
+  //console.log("this is the state of zmin and zmax:", zMin, zMax);
   // console.log(
   //   "this is the state of minLimit and maxLimit:",
   //   minLimit,
@@ -119,21 +119,21 @@ export default function Heatmap({ updatexData, updateyData }) {
       // zoom-in
 
       // Increment zMin only on zoom-in events
-      console.log("scrolling up");
-      console.log("I am increasing zMin", zMin);
+      //console.log("scrolling up");
+      //console.log("I am increasing zMin", zMin);
       setZMin((prevZMin) => Math.min(maxLimit, prevZMin + 1000));
     } else if (event.deltaY > 0 && configValue === "Update zMin") {
       //zoom-out
       // decremeant zMin only on zoom-in events
-      console.log("I am decreasing zMin", zMin);
+      //console.log("I am decreasing zMin", zMin);
       setZMin((prevZMin) => Math.max(minLimit, prevZMin - 1000));
-      console.log("scrolling down");
+      //console.log("scrolling down");
     } else if (event.deltaY < 0 && configValue === "Update zMax") {
-      console.log("I am increasing zMax", zMax);
+      //console.log("I am increasing zMax", zMax);
       setZMax((prevZMax) => Math.min(maxLimit, prevZMax + 1000));
     } else if (event.deltaY > 0 && configValue === "Update zMax") {
       //zoom-out
-      console.log("I am decreasing zMax", zMax);
+      //console.log("I am decreasing zMax", zMax);
       setZMax((prevZMax) => Math.max(minLimit, prevZMax - 1000));
     }
   };

@@ -7,7 +7,7 @@ import FormLabel from "@mui/material/FormLabel";
 
 export default function Heatmapconfig({ configValue, updateConfigValue }) {
   const options = ["Default","Scroll Zoom", "Update zMin", "Update zMax", "Reset"];
-  console.log("this is the value:", configValue)
+  //console.log("this is the value:", configValue)
 
   const handleChange = (event) => {
     updateConfigValue(event.target.value);
