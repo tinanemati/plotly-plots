@@ -152,6 +152,8 @@ export default function Heatmap({ updatexData, updateyData }) {
     }
   }, [configValue]);
 
+  const scrollZoom = configValue === "Scroll Zoom" ? true : false;
+
   return (
     <div
       className="Heatmap-style"
@@ -213,14 +215,12 @@ export default function Heatmap({ updatexData, updateyData }) {
               },
             },
           ],
-          modebar: {
-            remove: ["pan", "toImage", "autoscale", "zoom", "resetscale"],
-          },
+          dragmode: "pan", // Enable panning
         }}
         onHover={handleHover}
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
-        config={{ displaylogo: false }} // Enable scroll zoom
+        config={{ scrollZoom: scrollZoom, displaylogo: false, displayModeBar: false }}
       />
     </div>
   );
