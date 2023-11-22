@@ -28,7 +28,7 @@ export default function LinePlot({ xData, yData }) {
 
   const handleHover = (data) => {
     if (hoverActive) {
-      const hoverPointIndex = data.point[0].pointIndex;
+      const hoverPointIndex = data.points[0].pointIndex;
       const xValue = xData[hoverPointIndex]
       console.log(
         "onHover",
@@ -39,6 +39,22 @@ export default function LinePlot({ xData, yData }) {
     }
   };
 
+  const handleClick = (data) => {
+    if (hoverActive) {
+      const clickPointIndex = data.points[0].pointIndex; // this will be the left side of our integral
+      const xValue = xData[clickPointIndex]
+      console.log(
+        "onClick",
+        data.points[0],
+        "testing finding x using pointIndex:",
+        xValue
+      );
+    }
+  };
+
+  // const handleDoubleClick = () => {
+  //   setHoverActive(true);
+  // };
   return (
     <div
       className="lineplot-style"
@@ -92,6 +108,8 @@ export default function LinePlot({ xData, yData }) {
           displayModeBar: false,
         }}
         onHover={handleHover}
+        onClick={handleClick}
+        //onDoubleClick={handleDoubleClick}
       />
     </div>
   );
