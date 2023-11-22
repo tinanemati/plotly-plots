@@ -11,8 +11,6 @@ export default function Heatmap({ updatexData, updateyData }) {
   const [hoverActive, setHoverActive] = useState(true);
   const [zMin, setZMin] = useState(null);
   const [zMax, setZMax] = useState(null);
-  const [prevXRange, setPrevXRange] = useState(null);
-  const [prevYRange, setPrevYRange] = useState(null);
   const [minLimit, setMinLimit] = useState(null);
   const [maxLimit, setMaxLimit] = useState(null);
   const [configValue, setConfigValue] = useState("");
@@ -71,10 +69,6 @@ export default function Heatmap({ updatexData, updateyData }) {
     setHorizontalLinePosition(yData[0]);
     updateyData(zData[0]);
     updatexData(xData);
-    // Calculate x and y ranges
-    const { xRange, yRange } = calculateAxisRanges(xData, yData);
-    setPrevXRange(xRange);
-    setPrevYRange(yRange);
   }, []);
 
   const handleHover = (data) => {
@@ -99,18 +93,6 @@ export default function Heatmap({ updatexData, updateyData }) {
 
   const handleDoubleClick = () => {
     setHoverActive(true);
-  };
-  const calculateAxisRanges = (xData, yData) => {
-    if (xData.length === 0 || yData.length === 0) {
-      return { xRange: [0, 1], yRange: [0, 1] }; // Default ranges if data is empty
-    }
-
-    const xMin = Math.min(...xData);
-    const xMax = Math.max(...xData);
-    const yMin = Math.min(...yData);
-    const yMax = Math.max(...yData);
-
-    return { xRange: [xMin, xMax], yRange: [yMin, yMax] };
   };
 
   const handleWheel = (event) => {
@@ -160,7 +142,6 @@ export default function Heatmap({ updatexData, updateyData }) {
       style={{
         display: "flex",
         alignItems: "center",
-        overscrollBehavior: "contain",
       }}
       onWheel={handleWheel}
     >
