@@ -3,32 +3,44 @@ import Plot from "react-plotly.js";
 import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 
 export default function LinePlot({ xData, yData }) {
+  const [hoverActive, setHoverActive] = useState(false);
   const [configValue, setConfigValue] = useState("Standard");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
   };
   useEffect(() => {
     if (configValue === "Integration") {
-      console.log("this is where we have to apply the integration logic")
+      console.log("this is where we have to apply the integration logic");
+      setHoverActive(true);
+      console.log(
+        "when we are in the integration the hover mode should be set to true:",
+        hoverActive
+      );
     } else if (configValue === "Baseline") {
-        console.log("this is where we have to apply the baseline logic")
+      console.log("this is where we have to apply the baseline logic");
     } else if (configValue === "Reset") {
-        console.log("this is where we will apply the reset logic")
+      console.log("this is where we will apply the reset logic");
     }
   }, [configValue]);
 
   const scrollZoom = configValue === "Standard" ? true : false;
-  const dragMode = configValue === "Standard" ?  "pan" : false;
+  const dragMode = configValue === "Standard" ? "pan" : false;
 
   const handleHover = (data) => {
-    console.log("I am in the hover mode with this data:", data)
-    console.log("onHover", data.points[0], "testing finding x using pointIndex:", xData[data.points[0].pointIndex])
+    if (hoverActive) {
+      console.log(
+        "onHover",
+        data.points[0],
+        "testing finding x using pointIndex:",
+        xData[data.points[0].pointIndex]
+      );
+    }
     // if (hoverActive) {
     //   const clickedPointIndex = data.points[0].pointIndex[0];
     //   const yValue = arrayY[clickedPointIndex]; // Get the y-axis value where the user clicked
     //   setHorizontalLinePosition(yValue);
     //   updateyData(arrayZ[clickedPointIndex]);
-     
+
     //}
   };
 
@@ -77,9 +89,13 @@ export default function LinePlot({ xData, yData }) {
           yaxis: {
             title: "Ion Count",
           },
-          dragmode: dragMode
+          dragmode: dragMode,
         }}
-        config={{ scrollZoom: scrollZoom, displaylogo: false, displayModeBar: false }}
+        config={{
+          scrollZoom: scrollZoom,
+          displaylogo: false,
+          displayModeBar: false,
+        }}
         onHover={handleHover}
       />
     </div>
