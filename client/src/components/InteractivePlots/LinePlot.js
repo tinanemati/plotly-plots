@@ -41,6 +41,19 @@ export default function LinePlot({ xData, yData }) {
             mode: "lines+markers",
             marker: { color: "#6ECEB2" },
           },
+          {
+            x: xData.slice(0, xData.length + 1),
+            y: yData.slice(
+              0,
+              xData.length + 1
+            ),
+            fill: "tozeroy",
+            fillcolor: "#97ccc8",
+            type: "scatter",
+            line: {
+              color: "#1975d2"
+            },
+          },
         ]}
         layout={{
           width: 950,
