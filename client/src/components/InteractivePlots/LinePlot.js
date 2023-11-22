@@ -37,6 +37,7 @@ export default function LinePlot({ xData, yData }) {
         "testing finding x using pointIndex:",
         xValue
       );
+      setRightside(hoverPointIndex)
     }
   };
 
