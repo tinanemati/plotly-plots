@@ -23,6 +23,8 @@ export default function LinePlot({ xData, yData }) {
     } else if (configValue === "Reset") {
       console.log("this is where we will apply the reset logic");
       setHoverActive(false)
+      setLeftside(0)
+      setRightside(0)
     } else {
       setHoverActive(false)
     }
