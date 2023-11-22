@@ -13,7 +13,7 @@ export default function Heatmap({ updatexData, updateyData }) {
   const [zMax, setZMax] = useState(null);
   const [minLimit, setMinLimit] = useState(null);
   const [maxLimit, setMaxLimit] = useState(null);
-  const [configValue, setConfigValue] = useState("");
+  const [configValue, setConfigValue] = useState("Default");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
   };
