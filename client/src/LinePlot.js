@@ -27,7 +27,7 @@ export default function LinePlot({xData, yData}) {
         },
         dragmode: "pan", // Enable panning
       }}
-      config={{ scrollZoom: true, displaylogo: false }} // Enable scroll zoom
+      config={{ scrollZoom: true, displaylogo: false, displayModeBar: false  }} // Enable scroll zoom
     />
   );
 }
