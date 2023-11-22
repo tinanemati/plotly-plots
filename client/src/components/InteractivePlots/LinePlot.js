@@ -5,6 +5,10 @@ import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 export default function LinePlot({ xData, yData }) {
   const [hoverActive, setHoverActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
+  const [leftside, setLeftside] = useState(0);
+  const [rightside, setRightside] = useState(0);
+  console.log("this is the left side of my integral:", leftside, "this is the right side:", rightside)
+  console.log("how many times i have been clicked:", clickCount)
   const [configValue, setConfigValue] = useState("Standard");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -13,10 +17,6 @@ export default function LinePlot({ xData, yData }) {
     if (configValue === "Integration") {
       console.log("this is where we have to apply the integration logic");
       setHoverActive(true);
-      console.log(
-        "when we are in the integration the hover mode should be set to true:",
-        hoverActive
-      );
     } else if (configValue === "Baseline") {
       console.log("this is where we have to apply the baseline logic");
     } else if (configValue === "Reset") {
@@ -55,6 +55,7 @@ export default function LinePlot({ xData, yData }) {
           "testing finding left side x using pointIndex:",
           xValue
         );
+        setLeftside(clickPointIndex)
       } else if (clickCount === 1) {
         console.log("This is the second time you clicked.");
         const clickPointIndex = data.points[0].pointIndex; // this will be the right side of our integral
@@ -65,14 +66,17 @@ export default function LinePlot({ xData, yData }) {
           "testing finding right side x using pointIndex:",
           xValue
         );
+        setRightside(clickPointIndex)
         setHoverActive(false) // after we get the second point stop listening for new points
       } 
     }
   };
 
-  // const handleDoubleClick = () => {
-  //   setHoverActive(true);
-  // };
+  const handleDoubleClick = () => {
+    setHoverActive(true);
+    setClickCount(0)
+  };
+
   return (
     <div
       className="lineplot-style"
@@ -94,19 +98,19 @@ export default function LinePlot({ xData, yData }) {
             mode: "lines+markers",
             marker: { color: "#6ECEB2" },
           },
-          // {
-          //   x: xData.slice(0, xData.length + 1),
-          //   y: yData.slice(
-          //     0,
-          //     xData.length + 1
-          //   ),
-          //   fill: "tozeroy",
-          //   fillcolor: "#97ccc8",
-          //   type: "scatter",
-          //   line: {
-          //     color: "#1975d2"
-          //   },
-          // },
+          {
+            x: xData.slice(leftside, rightside),
+            y: yData.slice(
+              leftside,
+              rightside
+            ),
+            fill: "tozeroy",
+            fillcolor: "#97ccc8",
+            type: "scatter",
+            line: {
+              color: "#1975d2"
+            },
+          },
         ]}
         layout={{
           width: 950,
@@ -127,7 +131,7 @@ export default function LinePlot({ xData, yData }) {
         }}
         onHover={handleHover}
         onClick={handleClick}
-        //onDoubleClick={handleDoubleClick}
+        onDoubleClick={handleDoubleClick}
       />
     </div>
   );
