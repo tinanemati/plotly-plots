@@ -13,7 +13,7 @@ export default function Heatmap({ updatexData, updateyData }) {
   const [zMax, setZMax] = useState(null);
   const [minLimit, setMinLimit] = useState(null);
   const [maxLimit, setMaxLimit] = useState(null);
-  const [configValue, setConfigValue] = useState("Default");
+  const [configValue, setConfigValue] = useState("Standard");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
   };
@@ -135,6 +135,7 @@ export default function Heatmap({ updatexData, updateyData }) {
   }, [configValue]);
 
   const scrollZoom = configValue === "Scroll Zoom" ? true : false;
+  const dragMode = configValue === "Standard" ?  "pan" : false;
 
   return (
     <div
@@ -196,7 +197,7 @@ export default function Heatmap({ updatexData, updateyData }) {
               },
             },
           ],
-          dragmode: "pan", // Enable panning
+          dragmode: dragMode, 
         }}
         onHover={handleHover}
         onClick={handleClick}
