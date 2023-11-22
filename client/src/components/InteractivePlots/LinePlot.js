@@ -28,20 +28,15 @@ export default function LinePlot({ xData, yData }) {
 
   const handleHover = (data) => {
     if (hoverActive) {
+      const hoverPointIndex = data.point[0].pointIndex;
+      const xValue = xData[hoverPointIndex]
       console.log(
         "onHover",
         data.points[0],
         "testing finding x using pointIndex:",
-        xData[data.points[0].pointIndex]
+        xValue
       );
     }
-    // if (hoverActive) {
-    //   const clickedPointIndex = data.points[0].pointIndex[0];
-    //   const yValue = arrayY[clickedPointIndex]; // Get the y-axis value where the user clicked
-    //   setHorizontalLinePosition(yValue);
-    //   updateyData(arrayZ[clickedPointIndex]);
-
-    //}
   };
 
   return (
