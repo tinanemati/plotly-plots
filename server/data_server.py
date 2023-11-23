@@ -13,7 +13,7 @@ CORS(app)
 defaultFilename = "../assests/data/001-D3F-A1-5068080-0015-4.D"
 # Extract the file from the directory
 datadir = rb.read(defaultFilename)
-datafile = datadir.get_file("DAD1A.ch")
+datafile = datadir.get_file("MSD1.MS")
 data = datafile.data.T
 
 # Well data information that uses the path to the well we are looking for
@@ -24,7 +24,7 @@ def well():
     # Extract the requested masses from the file
     df = DataFrame(data, columns=datafile.xlabels.tolist(),
                    index=datafile.ylabels.tolist())
-    # df = df.query("260 < index < 340")
+    df = df.query("260 < index < 340")
 
     # Create the json object that will return the result from the data frame
     result = df.to_json(orient="split")
