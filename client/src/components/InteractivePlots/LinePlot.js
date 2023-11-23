@@ -7,8 +7,13 @@ export default function LinePlot({ xData, yData }) {
   const [clickCount, setClickCount] = useState(0);
   const [leftside, setLeftside] = useState(0);
   const [rightside, setRightside] = useState(0);
-  console.log("this is the left side of my integral:", leftside, "this is the right side:", rightside)
-  console.log("how many times i have been clicked:", clickCount)
+  console.log(
+    "this is the left side of my integral:",
+    leftside,
+    "this is the right side:",
+    rightside
+  );
+  console.log("how many times i have been clicked:", clickCount);
   const [configValue, setConfigValue] = useState("Standard");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -17,14 +22,14 @@ export default function LinePlot({ xData, yData }) {
     if (configValue === "Integration") {
       setHoverActive(true);
     } else if (configValue === "Baseline") {
-      setHoverActive(false)
+      setHoverActive(false);
     } else if (configValue === "Reset") {
-      setHoverActive(false)
-      setLeftside(0)
-      setRightside(0)
-      setClickCount(0)
+      setHoverActive(false);
+      setLeftside(0);
+      setRightside(0);
+      setClickCount(0);
     } else {
-      setHoverActive(false)
+      setHoverActive(false);
     }
   }, [configValue]);
 
@@ -41,7 +46,7 @@ export default function LinePlot({ xData, yData }) {
         "testing finding x using pointIndex:",
         xValue
       );
-      setRightside(hoverPointIndex)
+      setRightside(hoverPointIndex);
     }
   };
 
@@ -60,7 +65,7 @@ export default function LinePlot({ xData, yData }) {
         //   "testing finding left side x using pointIndex:",
         //   xValue
         // );
-        setLeftside(clickPointIndex)
+        setLeftside(clickPointIndex);
       } else if (clickCount === 1) {
         //console.log("This is the second time you clicked.");
         const clickPointIndex = data.points[0].pointIndex; // this will be the right side of our integral
@@ -71,17 +76,46 @@ export default function LinePlot({ xData, yData }) {
         //   "testing finding right side x using pointIndex:",
         //   xValue
         // );
-        setRightside(clickPointIndex)
-        setHoverActive(false) // after we get the second point stop listening for new points
-      } 
+        setRightside(clickPointIndex);
+        setHoverActive(false); // after we get the second point stop listening for new points
+      }
     }
   };
 
   const handleDoubleClick = () => {
     setHoverActive(true);
-    setClickCount(0)
+    setClickCount(0);
   };
 
+  useEffect(() => {
+    // make a request to the backend if click count is equal to two
+    const makeRequest = async () => {
+      if (clickCount === 2) {
+        try {
+          const response = await fetch("/area", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(leftside, rightside),
+          });
+
+          if (!response.ok) {
+            // Get the error message from server side and display to user
+            const errorData = await response.json();
+            console.log(errorData);
+          }
+
+          const responseData = await response.json();
+          console.log("this is my area calculated by the server:", responseData)
+          // Handle further processing based on the backend response
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+    };
+    makeRequest();
+  }, [clickCount]);
   return (
     <div
       className="lineplot-style"
@@ -105,15 +139,12 @@ export default function LinePlot({ xData, yData }) {
           },
           {
             x: xData.slice(leftside, rightside),
-            y: yData.slice(
-              leftside,
-              rightside
-            ),
+            y: yData.slice(leftside, rightside),
             fill: "tozeroy",
             fillcolor: "#97ccc8",
             type: "scatter",
             line: {
-              color: "#1975d2"
+              color: "#1975d2",
             },
           },
         ]}

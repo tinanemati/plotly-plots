@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from json import loads
 import rainbow as rb
@@ -15,14 +15,17 @@ datadir = rb.read(defaultFilename)
 datafile = datadir.get_file("DAD1A.ch")
 data = datafile.data.T
 
-# Well data information that uses the path to the well we are looking for 
+# Well data information that uses the path to the well we are looking for
+
+
 @app.route('/well')
 def well():
     # Extract the requested masses from the file
-    df = DataFrame(data, columns=datafile.xlabels.tolist(), index=datafile.ylabels.tolist())
-    #df = df.query("260 < index < 340")
+    df = DataFrame(data, columns=datafile.xlabels.tolist(),
+                   index=datafile.ylabels.tolist())
+    # df = df.query("260 < index < 340")
 
-    # Create the json object that will return the result from the data frame 
+    # Create the json object that will return the result from the data frame
     result = df.to_json(orient="split")
     parsed = loads(result)
     wellData = {
@@ -30,8 +33,25 @@ def well():
         "index": parsed['index'],
         "values": parsed['data']
     }
-    
+
     return jsonify(wellData)
 
+# Route that gives the path and channel that we need to process
+
+
+@app.route('/area', methods=['POST'])
+def area():
+    try:
+        # Retrieve data from the POST request
+        data = request.get_json()
+        print("this is the data I got:", data)
+
+        response = "data was received by server"
+        return jsonify(response), 200
+
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+
 if __name__ == '__main__':
-    app.run(debug=True, port=8001)
+    app.run(debug=True, port=7000)
