@@ -91,13 +91,17 @@ export default function LinePlot({ xData, yData }) {
     // make a request to the backend if click count is equal to two
     const makeRequest = async () => {
       if (clickCount === 2) {
+        const dataToSend = {
+          leftSide: leftside,
+          rightSide: rightside,
+        };
         try {
           const response = await fetch("/area", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(leftside, rightside),
+            body: JSON.stringify(dataToSend),
           });
 
           if (!response.ok) {
