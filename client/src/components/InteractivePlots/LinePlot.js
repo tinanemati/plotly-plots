@@ -15,13 +15,10 @@ export default function LinePlot({ xData, yData }) {
   };
   useEffect(() => {
     if (configValue === "Integration") {
-      console.log("this is where we have to apply the integration logic");
       setHoverActive(true);
     } else if (configValue === "Baseline") {
-      console.log("this is where we have to apply the baseline logic");
       setHoverActive(false)
     } else if (configValue === "Reset") {
-      console.log("this is where we will apply the reset logic");
       setHoverActive(false)
       setLeftside(0)
       setRightside(0)
@@ -54,26 +51,26 @@ export default function LinePlot({ xData, yData }) {
       setClickCount((prevCount) => prevCount + 1);
       // Check if it's the first or second time the button is clicked
       if (clickCount === 0) {
-        console.log("This is the first time you clicked.");
+        //console.log("This is the first time you clicked.");
         const clickPointIndex = data.points[0].pointIndex; // this will be the left side of our integral
-        const xValue = xData[clickPointIndex];
-        console.log(
-          "onClick",
-          data.points[0],
-          "testing finding left side x using pointIndex:",
-          xValue
-        );
+        //const xValue = xData[clickPointIndex];
+        // console.log(
+        //   "onClick",
+        //   data.points[0],
+        //   "testing finding left side x using pointIndex:",
+        //   xValue
+        // );
         setLeftside(clickPointIndex)
       } else if (clickCount === 1) {
-        console.log("This is the second time you clicked.");
+        //console.log("This is the second time you clicked.");
         const clickPointIndex = data.points[0].pointIndex; // this will be the right side of our integral
-        const xValue = xData[clickPointIndex];
-        console.log(
-          "onClick",
-          data.points[0],
-          "testing finding right side x using pointIndex:",
-          xValue
-        );
+        // const xValue = xData[clickPointIndex];
+        // console.log(
+        //   "onClick",
+        //   data.points[0],
+        //   "testing finding right side x using pointIndex:",
+        //   xValue
+        // );
         setRightside(clickPointIndex)
         setHoverActive(false) // after we get the second point stop listening for new points
       } 
