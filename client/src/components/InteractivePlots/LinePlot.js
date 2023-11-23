@@ -96,8 +96,8 @@ export default function LinePlot({ xData, yData }) {
     const makeRequest = async () => {
       if (clickCount === 2) {
         const dataToSend = {
-          xDataRange: xData.slice(leftside, rightside + 1),
-          yDataRange: yData.slice(leftside, rightside + 1),
+          xDataRange: xData.slice(leftside, rightside),
+          yDataRange: yData.slice(leftside, rightside),
         };
         try {
           const response = await fetch("/area", {
