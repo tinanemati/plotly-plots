@@ -46,17 +46,14 @@ def area():
         # Retrieve data from the POST request
         data = request.get_json()
         print("this is the data I got:", data)
-        #xDataRange = data.get("xDataRange")
-        #yDataRange = data.get("yDataRange")
-        # if (left_side != right_side):
-        #     area = simpson(
-        #         y =  yDataRange,
-        #         x = xDataRange
-        #         )
-        # else:
-        #     area = 0
+        xDataRange = data.get("xDataRange")
+        yDataRange = data.get("yDataRange")
+        area = simpson(
+            y=yDataRange,
+            x=xDataRange
+        )
 
-        response = "data was received by server and area calculated as", data 
+        response = "data was received by server and area calculated as", area
         return jsonify(response), 200
 
     except Exception as e:
