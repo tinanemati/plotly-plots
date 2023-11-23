@@ -4,6 +4,7 @@ from json import loads
 import rainbow as rb
 import pandas as pd
 from pandas import DataFrame
+from scipy.integrate import simpson
 
 # Create the app instance
 app = Flask(__name__)
@@ -45,8 +46,17 @@ def area():
         # Retrieve data from the POST request
         data = request.get_json()
         print("this is the data I got:", data)
+        #xDataRange = data.get("xDataRange")
+        #yDataRange = data.get("yDataRange")
+        # if (left_side != right_side):
+        #     area = simpson(
+        #         y =  yDataRange,
+        #         x = xDataRange
+        #         )
+        # else:
+        #     area = 0
 
-        response = "data was received by server"
+        response = "data was received by server and area calculated as", data 
         return jsonify(response), 200
 
     except Exception as e:
