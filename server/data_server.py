@@ -53,7 +53,7 @@ def area():
             x=xDataRange
         )
 
-        response = "data was received by server and area calculated as", area
+        response = {"area": area}
         return jsonify(response), 200
 
     except Exception as e:

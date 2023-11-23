@@ -7,11 +7,14 @@ export default function LinePlot({ xData, yData }) {
   const [clickCount, setClickCount] = useState(0);
   const [leftside, setLeftside] = useState(0);
   const [rightside, setRightside] = useState(0);
+  const [area, setArea] = useState(0);
   console.log(
     "this is the left side of my integral:",
     leftside,
     "this is the right side:",
-    rightside
+    rightside,
+    "this it the area",
+    area
   );
   console.log("how many times i have been clicked:", clickCount);
   const [configValue, setConfigValue] = useState("Standard");
@@ -28,6 +31,7 @@ export default function LinePlot({ xData, yData }) {
       setLeftside(0);
       setRightside(0);
       setClickCount(0);
+      setArea(0)
     } else {
       setHoverActive(false);
     }
@@ -111,7 +115,8 @@ export default function LinePlot({ xData, yData }) {
           }
 
           const responseData = await response.json();
-          console.log("this is my area calculated by the server:", responseData)
+          console.log("this is my area calculated by the server:", responseData.area)
+          setArea(responseData.area)
           // Handle further processing based on the backend response
         } catch (error) {
           console.error("Error:", error);
@@ -150,6 +155,7 @@ export default function LinePlot({ xData, yData }) {
             line: {
               color: "#1975d2",
             },
+            name: `area: ${area}`
           },
         ]}
         layout={{
