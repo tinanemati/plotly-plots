@@ -45,7 +45,6 @@ def area():
     try:
         # Retrieve data from the POST request
         data = request.get_json()
-        print("this is the data I got:", data)
         xDataRange = data.get("xDataRange")
         yDataRange = data.get("yDataRange")
         area = simpson(
