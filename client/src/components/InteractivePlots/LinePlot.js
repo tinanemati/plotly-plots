@@ -40,6 +40,7 @@ export default function LinePlot({ xData, yData }) {
       setRightside(0);
       setClickCount(0);
       setArea(0);
+      setRange([])
     } else {
       setHoverActive(false);
     }
