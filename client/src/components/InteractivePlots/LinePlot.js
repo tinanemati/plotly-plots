@@ -5,6 +5,13 @@ import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 export default function LinePlot({ xData, yData }) {
   const [hoverActive, setHoverActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
+  const [range, setRange] = useState([]);
+  // Function to update the range at a specific index
+  const updateRange = (index, newLeft, newRight) => {
+    const updatedRanges = [...range];
+    updatedRanges[index] = { leftside: newLeft, rightside: newRight };
+    setRange(updatedRanges);
+  };
   const [leftside, setLeftside] = useState(0);
   const [rightside, setRightside] = useState(0);
   const [area, setArea] = useState(0);
@@ -17,6 +24,7 @@ export default function LinePlot({ xData, yData }) {
     area
   );
   console.log("how many times i have been clicked:", clickCount);
+  console.log("this is the range we have:", range);
   const [configValue, setConfigValue] = useState("Standard");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -31,7 +39,7 @@ export default function LinePlot({ xData, yData }) {
       setLeftside(0);
       setRightside(0);
       setClickCount(0);
-      setArea(0)
+      setArea(0);
     } else {
       setHoverActive(false);
     }
@@ -82,6 +90,8 @@ export default function LinePlot({ xData, yData }) {
         // );
         setRightside(clickPointIndex);
         setHoverActive(false); // after we get the second point stop listening for new points
+        // Let's update the range here
+        updateRange(range.length, leftside, clickPointIndex);
       }
     }
   };
@@ -115,8 +125,11 @@ export default function LinePlot({ xData, yData }) {
           }
 
           const responseData = await response.json();
-          console.log("this is my area calculated by the server:", responseData.area)
-          setArea(responseData.area)
+          console.log(
+            "this is my area calculated by the server:",
+            responseData.area
+          );
+          setArea(responseData.area);
           // Handle further processing based on the backend response
         } catch (error) {
           console.error("Error:", error);
@@ -155,7 +168,7 @@ export default function LinePlot({ xData, yData }) {
             line: {
               color: "#1975d2",
             },
-            name: `area: ${area}`
+            name: `area: ${area}`,
           },
         ]}
         layout={{
