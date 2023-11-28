@@ -5,6 +5,7 @@ import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 export default function LinePlot({ xData, yData }) {
   const [hoverActive, setHoverActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
+  const [index, setIndex] = useState(0)
   const [range, setRange] = useState([]);
   // Function to update the range at a specific index
   const updateRange = (index, newLeft, newRight) => {
@@ -20,8 +21,8 @@ export default function LinePlot({ xData, yData }) {
     leftside,
     "this is the right side:",
     rightside,
-    "this it the area",
-    area
+    "this is my index:",
+    index
   );
   console.log("how many times i have been clicked:", clickCount);
   console.log("this is the range we have:", range);
@@ -40,7 +41,7 @@ export default function LinePlot({ xData, yData }) {
       setRightside(0);
       setClickCount(0);
       setArea(0);
-      setRange([])
+      setRange([]);
     } else {
       setHoverActive(false);
     }
@@ -60,6 +61,8 @@ export default function LinePlot({ xData, yData }) {
         xValue
       );
       setRightside(hoverPointIndex);
+      // Let's update the range here as well so we can see it when we hover on the plot
+      updateRange(index, leftside, hoverPointIndex);
     }
   };
 
@@ -79,6 +82,7 @@ export default function LinePlot({ xData, yData }) {
         //   xValue
         // );
         setLeftside(clickPointIndex);
+        setIndex(range.length)
       } else if (clickCount === 1) {
         //console.log("This is the second time you clicked.");
         const clickPointIndex = data.points[0].pointIndex; // this will be the right side of our integral
@@ -92,7 +96,7 @@ export default function LinePlot({ xData, yData }) {
         setRightside(clickPointIndex);
         setHoverActive(false); // after we get the second point stop listening for new points
         // Let's update the range here
-        updateRange(range.length, leftside, clickPointIndex);
+        updateRange(index, leftside, clickPointIndex);
       }
     }
   };
