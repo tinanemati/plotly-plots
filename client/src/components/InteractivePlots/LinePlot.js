@@ -159,17 +159,27 @@ export default function LinePlot({ xData, yData }) {
             mode: "lines+markers",
             marker: { color: "#6ECEB2" },
           },
-          {
-            x: xData.slice(leftside, rightside),
-            y: yData.slice(leftside, rightside),
-            fill: "tozeroy",
-            fillcolor: "#97ccc8",
-            type: "scatter",
-            line: {
-              color: "#1975d2",
-            },
-            name: `area: ${area}`,
-          },
+          ...(range.length > 0
+            ? range.map((item, index) => ({
+                x: xData.slice(item.leftside, item.rightside),
+                y: yData.slice(item.leftside, item.rightside),
+                fill: "tozeroy",
+                fillcolor: "#97ccc8",
+                type: "scatter",
+                line: {
+                  color: "#1975d2",
+                },
+                name: `area ${index + 1}: ${area}`,
+              }))
+            : [
+                {
+                  // Placeholder data or an empty trace if range is empty
+                  x: 0,
+                  y: 0,
+                  type: "scatter",
+                  name: "No Data",
+                },
+              ]),
         ]}
         layout={{
           width: 950,
