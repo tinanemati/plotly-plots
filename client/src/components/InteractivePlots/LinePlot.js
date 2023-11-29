@@ -14,7 +14,6 @@ export default function LinePlot({ xData, yData }) {
     setRange(updatedRanges);
   };
   const [leftside, setLeftside] = useState(0);
-  const [rightside, setRightside] = useState(0);
   const [area, setArea] = useState([]);
   // Function to update the area at a specific index
   const updateArea = (index, newArea) => {
@@ -23,17 +22,14 @@ export default function LinePlot({ xData, yData }) {
     setArea(updatedareas);
   };
   console.log(
-    "this is the left side of my integral:",
-    leftside,
-    "this is the right side:",
-    rightside,
+    "this is the range we have:",
+    range,
     "this is my index:",
     index,
     "this is my area:",
     area
   );
   console.log("how many times i have been clicked:", clickCount);
-  console.log("this is the range we have:", range);
   const [configValue, setConfigValue] = useState("Standard");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -46,7 +42,6 @@ export default function LinePlot({ xData, yData }) {
     } else if (configValue === "Reset") {
       setHoverActive(false);
       setLeftside(0);
-      setRightside(0);
       setClickCount(0);
       setArea([]);
       setRange([]);
@@ -94,7 +89,6 @@ export default function LinePlot({ xData, yData }) {
         //   "testing finding right side x using pointIndex:",
         //   xValue
         // );
-        setRightside(clickPointIndex);
         setHoverActive(false); // after we get the second point stop listening for new points
         // Let's update the range here
         updateRange(index, leftside, clickPointIndex);
@@ -112,8 +106,8 @@ export default function LinePlot({ xData, yData }) {
     const makeRequest = async () => {
       if (clickCount === 2) {
         const dataToSend = {
-          xDataRange: xData.slice(leftside, rightside),
-          yDataRange: yData.slice(leftside, rightside),
+          xDataRange: xData.slice(range[index].leftside, range[index].rightside),
+          yDataRange: yData.slice(range[index].leftside, range[index].rightside),
         };
         try {
           const response = await fetch("/area", {
