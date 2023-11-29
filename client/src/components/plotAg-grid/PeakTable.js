@@ -3,7 +3,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 
-export default function RegionTable() {
+export default function PeakTable() {
   const [rowData] = useState([
     { Name: "Region 1", Channel: "MS 1", TimeRange: "[ : ]", CalculatedArea: 0 },
     { Name: "Region 2", Channel: "MS 1", TimeRange: "[ : ]", CalculatedArea: 0 },
