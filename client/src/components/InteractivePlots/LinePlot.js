@@ -5,7 +5,7 @@ import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 export default function LinePlot({ xData, yData }) {
   const [hoverActive, setHoverActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
-  const [index, setIndex] = useState(0)
+  const [index, setIndex] = useState(0);
   const [range, setRange] = useState([]);
   // Function to update the range at a specific index
   const updateRange = (index, newLeft, newRight) => {
@@ -29,7 +29,7 @@ export default function LinePlot({ xData, yData }) {
     rightside,
     "this is my index:",
     index,
-    "this is my area:", 
+    "this is my area:",
     area
   );
   console.log("how many times i have been clicked:", clickCount);
@@ -50,7 +50,7 @@ export default function LinePlot({ xData, yData }) {
       setClickCount(0);
       setArea(0);
       setRange([]);
-      setIndex(0)
+      setIndex(0);
     } else {
       setHoverActive(false);
     }
@@ -91,7 +91,7 @@ export default function LinePlot({ xData, yData }) {
         //   xValue
         // );
         setLeftside(clickPointIndex);
-        setIndex(range.length)
+        setIndex(range.length);
       } else if (clickCount === 1) {
         //console.log("This is the second time you clicked.");
         const clickPointIndex = data.points[0].pointIndex; // this will be the right side of our integral
@@ -143,7 +143,7 @@ export default function LinePlot({ xData, yData }) {
             "this is my area calculated by the server:",
             responseData.area
           );
-          updateArea(index, responseData.area)
+          updateArea(index, responseData.area);
           // Handle further processing based on the backend response
         } catch (error) {
           console.error("Error:", error);
@@ -183,7 +183,9 @@ export default function LinePlot({ xData, yData }) {
                 line: {
                   color: "#1975d2",
                 },
-                name: `area ${index + 1}: ${area[index].index}`,
+                name: area[index]
+                  ? `area ${index + 1}: ${area[index].index}`
+                  : undefined,
               }))
             : [
                 {
