@@ -58,9 +58,12 @@ export default function LinePlot({ xData, yData }) {
       const updatedRegions = range.map((item, index) => {
         const regionName = `Region ${index + 1}`;
         const channel = "MS 1";
+        const power = Math.pow(10, 3);
         const { leftside, rightside } = item;
-        const calculatedArea = area[index].calculatedArea;
-        const timeRange = `[${xData[leftside]} : ${xData[rightside - 1]}]`;
+        const calculatedArea =  Math.trunc(area[index].calculatedArea * power) / power;
+        const start_time = Math.trunc(xData[leftside] * power) / power
+        const end_time = Math.trunc(xData[rightside - 1] * power) / power
+        const timeRange = `[${start_time} : ${end_time}]`;
 
         return {
           Name: regionName,
