@@ -60,7 +60,7 @@ export default function LinePlot({ xData, yData }) {
         const channel = "MS 1";
         const { leftside, rightside } = item;
         const calculatedArea = area[index].calculatedArea;
-        const timeRange = `[${leftside} : ${rightside}]`;
+        const timeRange = `[${xData[leftside]} : ${xData[rightside - 1]}]`;
 
         return {
           Name: regionName,
