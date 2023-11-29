@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
+import RegionTable from "../plotAg-grid/regionTable";
 import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 
 export default function LinePlot({ xData, yData }) {
@@ -106,8 +107,14 @@ export default function LinePlot({ xData, yData }) {
     const makeRequest = async () => {
       if (clickCount === 2) {
         const dataToSend = {
-          xDataRange: xData.slice(range[index].leftside, range[index].rightside),
-          yDataRange: yData.slice(range[index].leftside, range[index].rightside),
+          xDataRange: xData.slice(
+            range[index].leftside,
+            range[index].rightside
+          ),
+          yDataRange: yData.slice(
+            range[index].leftside,
+            range[index].rightside
+          ),
         };
         try {
           const response = await fetch("/area", {
@@ -204,6 +211,9 @@ export default function LinePlot({ xData, yData }) {
         onClick={handleClick}
         onDoubleClick={handleDoubleClick}
       />
+      <div style={{height: "200px", width: "350px"}}>
+        <RegionTable />
+      </div>
     </div>
   );
 }
