@@ -5,9 +5,9 @@ import "ag-grid-community/styles/ag-theme-balham.css";
 
 export default function RegionTable() {
   const [rowData] = useState([
-    { Name: "Toyota", Channel: "Celica", TimeRange: 35000, CalculatedArea: 0 },
-    { Name: "Ford", Channel: "Mondeo", TimeRange: 32000, CalculatedArea: 0 },
-    { Name: "Porsche", Channel: "Boxter", TimeRange: 72000, CalculatedArea: 0 },
+    { Name: "Region 1", Channel: "MS 1", TimeRange: "[ : ]", CalculatedArea: 0 },
+    { Name: "Region 2", Channel: "MS 1", TimeRange: "[ : ]", CalculatedArea: 0 },
+    { Name: "Region 3", Channel: "MS 1", TimeRange: "[ : ]", CalculatedArea: 0 },
   ]);
 
   const [columnDefs] = useState([
