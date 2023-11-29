@@ -47,6 +47,7 @@ export default function LinePlot({ xData, yData }) {
       setArea([]);
       setRange([]);
       setIndex(0);
+      setRegionData([])
     } else {
       setHoverActive(false);
     }

@@ -5,10 +5,10 @@ import "ag-grid-community/styles/ag-theme-balham.css";
 
 export default function RegionTable({ regionData }) {
   // we need to get time range and calculated areas from the LinePlot
-  const [rowData, setRowData] = useState([]);
+  const [rowData, setRowData] = useState();
 
   useEffect(() => {
-    if (regionData.length !== 0) {
+    if (regionData) {
       setRowData(regionData);
     }
   }, [regionData]);
