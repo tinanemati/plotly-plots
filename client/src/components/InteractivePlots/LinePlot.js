@@ -62,14 +62,6 @@ export default function LinePlot({ xData, yData }) {
   const handleHover = (data) => {
     if (hoverActive && clickCount === 1) {
       const hoverPointIndex = data.points[0].pointIndex;
-      //const xValue = xData[hoverPointIndex];
-      // console.log(
-      //   "onHover",
-      //   data.points[0],
-      //   "testing finding x using pointIndex:",
-      //   xValue
-      // );
-      setRightside(hoverPointIndex);
       // Let's update the range here as well so we can see it when we hover on the plot
       updateRange(index, leftside, hoverPointIndex);
     }
