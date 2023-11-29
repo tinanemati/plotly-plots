@@ -15,14 +15,22 @@ export default function LinePlot({ xData, yData }) {
   };
   const [leftside, setLeftside] = useState(0);
   const [rightside, setRightside] = useState(0);
-  const [area, setArea] = useState(0);
+  const [area, setArea] = useState([]);
+  // Function to update the area at a specific index
+  const updateArea = (index, newArea) => {
+    const updatedareas = [...area];
+    updatedareas[index] = { index: newArea };
+    setArea(updatedareas);
+  };
   console.log(
     "this is the left side of my integral:",
     leftside,
     "this is the right side:",
     rightside,
     "this is my index:",
-    index
+    index,
+    "this is my area:", 
+    area
   );
   console.log("how many times i have been clicked:", clickCount);
   console.log("this is the range we have:", range);
@@ -54,13 +62,13 @@ export default function LinePlot({ xData, yData }) {
   const handleHover = (data) => {
     if (hoverActive && clickCount === 1) {
       const hoverPointIndex = data.points[0].pointIndex;
-      const xValue = xData[hoverPointIndex];
-      console.log(
-        "onHover",
-        data.points[0],
-        "testing finding x using pointIndex:",
-        xValue
-      );
+      //const xValue = xData[hoverPointIndex];
+      // console.log(
+      //   "onHover",
+      //   data.points[0],
+      //   "testing finding x using pointIndex:",
+      //   xValue
+      // );
       setRightside(hoverPointIndex);
       // Let's update the range here as well so we can see it when we hover on the plot
       updateRange(index, leftside, hoverPointIndex);
@@ -135,7 +143,7 @@ export default function LinePlot({ xData, yData }) {
             "this is my area calculated by the server:",
             responseData.area
           );
-          setArea(responseData.area);
+          updateArea(index, responseData.area)
           // Handle further processing based on the backend response
         } catch (error) {
           console.error("Error:", error);
@@ -175,7 +183,7 @@ export default function LinePlot({ xData, yData }) {
                 line: {
                   color: "#1975d2",
                 },
-                name: `area ${index + 1}: ${area}`,
+                name: `area ${index + 1}: ${area[index].index}`,
               }))
             : [
                 {
