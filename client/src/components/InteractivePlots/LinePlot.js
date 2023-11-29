@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import PeakTable from "../plotAg-grid/PeakTable";
+import RegionTable from "../plotAg-grid/RegionTable";
 import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 
 export default function LinePlot({ xData, yData }) {
@@ -237,7 +237,7 @@ export default function LinePlot({ xData, yData }) {
         onDoubleClick={handleDoubleClick}
       />
       <div style={{height: "200px", width: "350px"}}>
-        <PeakTable regionData={regionData}/>
+        <RegionTable regionData={regionData}/>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-balham.css";
 
-export default function PeakTable({ regionData }) {
+export default function RegionTable({ regionData }) {
   // we need to get time range and calculated areas from the LinePlot
   const [rowData, setRowData] = useState([]);
 
