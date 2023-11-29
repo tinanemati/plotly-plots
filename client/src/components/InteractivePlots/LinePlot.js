@@ -19,7 +19,7 @@ export default function LinePlot({ xData, yData }) {
   // Function to update the area at a specific index
   const updateArea = (index, newArea) => {
     const updatedareas = [...area];
-    updatedareas[index] = { index: newArea };
+    updatedareas[index] = { calculatedArea: newArea };
     setArea(updatedareas);
   };
   console.log(
@@ -48,7 +48,7 @@ export default function LinePlot({ xData, yData }) {
       setLeftside(0);
       setRightside(0);
       setClickCount(0);
-      setArea(0);
+      setArea([]);
       setRange([]);
       setIndex(0);
     } else {
@@ -184,7 +184,7 @@ export default function LinePlot({ xData, yData }) {
                   color: "#1975d2",
                 },
                 name: area[index]
-                  ? `area ${index + 1}: ${area[index].index}`
+                  ? `area ${index + 1}: ${area[index].calculatedArea}`
                   : undefined,
               }))
             : [
