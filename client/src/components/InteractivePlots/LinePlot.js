@@ -52,6 +52,28 @@ export default function LinePlot({ xData, yData }) {
     }
   }, [configValue]);
 
+  const [regionData, setRegionData] = useState([])
+  useEffect(() => {
+    if (area.length > 0) {
+      const updatedRegions = range.map((item, index) => {
+        const regionName = `Region ${index + 1}`;
+        const channel = "MS 1";
+        const { leftside, rightside } = item;
+        const calculatedArea = area[index].calculatedArea;
+        const timeRange = `[${leftside} : ${rightside}]`;
+
+        return {
+          Name: regionName,
+          Channel: channel,
+          TimeRange: timeRange,
+          CalculatedArea: calculatedArea
+        };
+      });
+
+      setRegionData(updatedRegions);
+    }
+  }, [area]);
+  console.log("this is the data for table:", regionData)
   const scrollZoom = configValue === "Standard" ? true : false;
   const dragMode = configValue === "Standard" ? "pan" : false;
 
@@ -132,10 +154,10 @@ export default function LinePlot({ xData, yData }) {
           }
 
           const responseData = await response.json();
-          console.log(
-            "this is my area calculated by the server:",
-            responseData.area
-          );
+          // console.log(
+          //   "this is my area calculated by the server:",
+          //   responseData.area
+          // );
           updateArea(index, responseData.area);
           // Handle further processing based on the backend response
         } catch (error) {
@@ -177,7 +199,7 @@ export default function LinePlot({ xData, yData }) {
                   color: "#1975d2",
                 },
                 name: area[index]
-                  ? `area ${index + 1}: ${area[index].calculatedArea}`
+                  ? `Region ${index + 1}`
                   : undefined,
               }))
             : [
@@ -212,7 +234,7 @@ export default function LinePlot({ xData, yData }) {
         onDoubleClick={handleDoubleClick}
       />
       <div style={{height: "200px", width: "350px"}}>
-        <PeakTable />
+        <PeakTable regionData={regionData}/>
       </div>
     </div>
   );
