@@ -27,7 +27,6 @@ export default function Heatmap({
   //console.log("this is the configValue:", configValue);
   console.log("this is the state of zmin and zmax:", zMin, zMax);
   console.log("this is the state of zminSci and zmaxSci:", zMinSci, zMaxSci);
-  
 
   // console.log("this is arrayZ: ", arrayZ);
   // console.log(
@@ -54,7 +53,7 @@ export default function Heatmap({
 
     // Format the result in scientific notation
     return `${coefficient.toFixed(1)} × 10^${exponent}`;
-  }
+  };
 
   // Calculate zmin and zmax from arrayZ data
   useEffect(() => {
@@ -154,7 +153,7 @@ export default function Heatmap({
       setZMinSci(toScientificNotation(parseFloat(zMin)));
       setZMaxSci(toScientificNotation(parseFloat(zMax)));
     }
-  }, [zMin, zMax])
+  }, [zMin, zMax]);
 
   useEffect(() => {
     if (configValue === "Reset") {
