@@ -165,6 +165,8 @@ export default function Heatmap({
     if (configValue === "Reset") {
       setZMax(maxLimit);
       setZMin(minLimit);
+      setZMinSci(toScientificNotation(parseFloat(minLimit)));
+      setZMaxSci(toScientificNotation(parseFloat(maxLimit)));
     } else if (configValue === "Update zMax" || configValue === "Update zMin") {
       const cancelWheel = (event) => event.preventDefault();
 
