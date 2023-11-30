@@ -31,7 +31,7 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
     area
   );
   console.log("how many times i have been clicked:", clickCount);
-  const [configValue, setConfigValue] = useState("Standard");
+  const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
   };
@@ -86,12 +86,12 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
       setArea([]);
       setRange([]);
       setIndex(0);
-      setConfigValue("Standard")
+      setConfigValue("Scroll Zoom & Pan")
     }
   }, [regionData]);
 
-  const scrollZoom = configValue === "Standard" ? true : false;
-  const dragMode = configValue === "Standard" ? "pan" : false;
+  const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
+  const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
 
   const handleHover = (data) => {
     if (hoverActive && clickCount === 1) {

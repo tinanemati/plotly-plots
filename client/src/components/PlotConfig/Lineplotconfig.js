@@ -6,7 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 
 export default function Lineplotconfig({ configValue, updateConfigValue }) {
-  const options = ["Standard","Integration", "Baseline", "Reset"];
+  const options = ["Scroll Zoom & Pan","Integration", "Baseline", "Reset"];
   //console.log("this is the value:", configValue)
 
   const handleChange = (event) => {
