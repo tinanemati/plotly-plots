@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import data from "../../sample-data.json"
+import data from "../../sample-data.json";
 import Heatmapconfig from "../PlotConfig/Heatmapconfig";
 
-export default function Heatmap({ updatexData, updateyData, updateRegionData }) {
+export default function Heatmap({
+  updatexData,
+  updateyData,
+  updateRegionData,
+}) {
   const [arrayX, setArrayX] = useState([]);
   const [arrayY, setArrayY] = useState([]);
   const [arrayZ, setArrayZ] = useState([]);
@@ -11,6 +15,8 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
   const [hoverActive, setHoverActive] = useState(true);
   const [zMin, setZMin] = useState(null);
   const [zMax, setZMax] = useState(null);
+  const [zMinSci, setZMinSci] = useState(null);
+  const [zMaxSci, setZMaxSci] = useState(null);
   const [minLimit, setMinLimit] = useState(null);
   const [maxLimit, setMaxLimit] = useState(null);
   const [configValue, setConfigValue] = useState("Select (m/z) slices");
@@ -19,7 +25,10 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
   };
 
   //console.log("this is the configValue:", configValue);
-  //console.log("this is the state of zmin and zmax:", zMin, zMax);
+  console.log("this is the state of zmin and zmax:", zMin, zMax);
+  console.log("this is the state of zminSci and zmaxSci:", zMinSci, zMaxSci);
+  console.log("this is arrayZ: ", arrayZ);
+
   // console.log(
   //   "this is the state of minLimit and maxLimit:",
   //   minLimit,
@@ -30,6 +39,29 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
   //   prevXRange,
   //   prevYRange
   // );
+
+  // Function to convert a number to scientific notation
+  function toScientificNotation(num) {
+    // Check if the number is zero, return 0 in scientific notation
+    if (num === 0) return "0";
+
+    // Get the exponent for scientific notation
+    const exponent = Math.floor(Math.log10(Math.abs(num)));
+
+    // Calculate the coefficient for scientific notation
+    const coefficient = num / Math.pow(10, exponent);
+
+    // Format the result in scientific notation
+    return `${coefficient.toFixed(1)} × 10^${exponent}`;
+  }
+
+  // Convert the values to scientific notation
+  const arrayZScientific = arrayZ.map((row) => {
+    return row.map((value) => {
+      // Convert value to scientific notation (using toExponential) and parse it back to a number
+      return toScientificNotation(parseFloat(value));
+    });
+  });
 
   // Calculate zmin and zmax from arrayZ data
   useEffect(() => {
@@ -50,6 +82,8 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
       });
 
       // Set zMin and zMax states with calculated values
+      setZMinSci(toScientificNotation(parseFloat(min)));
+      setZMaxSci(toScientificNotation(parseFloat(max)));
       setZMin(min);
       setZMax(max);
       setMinLimit(min);
@@ -94,7 +128,7 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
 
   const handleDoubleClick = () => {
     setHoverActive(true);
-    updateRegionData([])
+    updateRegionData([]);
   };
 
   const handleWheel = (event) => {
@@ -137,10 +171,13 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
   }, [configValue]);
 
   const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
-  const dragMode = configValue === "Scroll Zoom & Pan" ?  "pan" : false;
-  const doubleClickHandler = configValue === "Select (m/z) slices" ? handleDoubleClick : () => {};
-  const onHoverHandler = configValue === "Select (m/z) slices" ? handleHover : () => {};
-  const onClickHandler = configValue === "Select (m/z) slices" ? handleClick : () => {};
+  const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
+  const doubleClickHandler =
+    configValue === "Select (m/z) slices" ? handleDoubleClick : () => {};
+  const onHoverHandler =
+    configValue === "Select (m/z) slices" ? handleHover : () => {};
+  const onClickHandler =
+    configValue === "Select (m/z) slices" ? handleClick : () => {};
 
   return (
     <div
@@ -169,7 +206,7 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
             colorbar: {
               len: 0.8,
               thickness: 20,
-              //exponentformat: "power"
+              exponentformat: "power",
             },
           },
         ]}
@@ -203,7 +240,7 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
               },
             },
           ],
-          dragmode: dragMode, 
+          dragmode: dragMode,
         }}
         onHover={onHoverHandler}
         onClick={onClickHandler}
