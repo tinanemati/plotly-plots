@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -11,6 +11,11 @@ export default function Heatmapconfig({
   zMaxSci,
   zMinSci,
 }) {
+  const [coefficientMax, setCoefficientMax] = useState();
+  const [coefficientMin, setCoefficientMin] = useState();
+  const [exponentMin, setExponentMin] = useState();
+  const [exponentMax, setExponentMax] = useState();
+
   const options = [
     "Select (m/z) slices",
     "Scroll Zoom & Pan",
@@ -23,9 +28,17 @@ export default function Heatmapconfig({
   const handleChange = (event) => {
     updateConfigValue(event.target.value);
   };
-  // Extract the coefficient and exponent from the scientific string
-  const [coefficientMax, exponentMax] = zMaxSci.split(" × 10^");
-  const [coefficientMin, exponentMin] = zMinSci.split(" × 10^");
+  useEffect(() => {
+    if (zMaxSci && zMaxSci) {
+      // Extract the coefficient and exponent from the scientific string
+      const [coefficientMax, exponentMax] = zMaxSci.split(" × 10^");
+      setCoefficientMax(coefficientMax);
+      setExponentMax(exponentMax);
+      const [coefficientMin, exponentMin] = zMinSci.split(" × 10^");
+      setCoefficientMin(coefficientMin);
+      setExponentMin(exponentMin);
+    }
+  }, [zMaxSci, zMinSci]);
 
   return (
     <FormControl sx={{ display: "flex" }}>
@@ -45,9 +58,13 @@ export default function Heatmapconfig({
               option === "Update zMin" ? (
                 <span>
                   {option}{" "}
-                  <strong>
-                    {coefficientMin} x 10 <sup>{exponentMin}</sup>
-                  </strong>
+                  {coefficientMin !== "0" ? (
+                    <strong>
+                      {coefficientMin} x 10<sup>{exponentMin}</sup>
+                    </strong>
+                  ) : (
+                    <strong>{coefficientMin}</strong>
+                  )}
                 </span>
               ) : option === "Update zMax" ? (
                 <span>
