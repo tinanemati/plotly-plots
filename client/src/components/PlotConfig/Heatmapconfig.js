@@ -23,7 +23,10 @@ export default function Heatmapconfig({
   const handleChange = (event) => {
     updateConfigValue(event.target.value);
   };
-  
+  // Extract the coefficient and exponent from the scientific string
+  const [coefficientMax, exponentMax] = zMaxSci.split(" × 10^");
+  const [coefficientMin, exponentMin] = zMinSci.split(" × 10^");
+
   return (
     <FormControl sx={{ display: "flex" }}>
       <FormLabel sx={{ marginLeft: "10px" }}>Heatmap options:</FormLabel>
@@ -41,11 +44,17 @@ export default function Heatmapconfig({
             label={
               option === "Update zMin" ? (
                 <span>
-                  {option} <strong>{zMinSci}</strong>
+                  {option}{" "}
+                  <strong>
+                    {coefficientMin} x 10 <sup>{exponentMin}</sup>
+                  </strong>
                 </span>
               ) : option === "Update zMax" ? (
                 <span>
-                  {option} <strong>{zMaxSci}</strong>
+                  {option}{" "}
+                  <strong>
+                    {coefficientMax} x 10 <sup>{exponentMax}</sup>
+                  </strong>
                 </span>
               ) : (
                 option
