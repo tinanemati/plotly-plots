@@ -13,7 +13,7 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
   const [zMax, setZMax] = useState(null);
   const [minLimit, setMinLimit] = useState(null);
   const [maxLimit, setMaxLimit] = useState(null);
-  const [configValue, setConfigValue] = useState("Standard");
+  const [configValue, setConfigValue] = useState("Select (m/z) slices");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
   };
@@ -138,7 +138,7 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
 
   const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
   const dragMode = configValue === "Scroll Zoom & Pan" ?  "pan" : false;
-  const doubleClickHandler = configValue === "Standard" ? handleDoubleClick : () => {};
+  const doubleClickHandler = configValue === "Select (m/z) slices" ? handleDoubleClick : () => {};
 
   return (
     <div
