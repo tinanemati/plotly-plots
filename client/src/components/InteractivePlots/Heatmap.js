@@ -169,7 +169,7 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
             colorbar: {
               len: 0.8,
               thickness: 20,
-              exponentformat: "power"
+              //exponentformat: "power"
             },
           },
         ]}
