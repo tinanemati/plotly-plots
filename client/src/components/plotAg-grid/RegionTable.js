@@ -16,9 +16,9 @@ export default function RegionTable({ regionData }) {
   const gridOptions = {
     columnDefs: [
       { field: "Name", width: 90 },
-      { field: "Channel", width: 90 },
-      { field: "TimeRange", headerName: "Time Range", width: 95 },
-      { field: "CalculatedArea", headerName: "Area", width: 90 },
+      { field: "Channel", width: 74 },
+      { field: "TimeRange", headerName: "Time Range", width: 111 },
+      { field: "CalculatedArea", headerName: "Area", width: 80 },
     ],
   };
   // DefaultColDef sets props common to all Columns
