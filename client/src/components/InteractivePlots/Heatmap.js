@@ -42,7 +42,7 @@ export default function Heatmap({
   // );
 
   // Function to convert a number to scientific notation
-  function toScientificNotation(num) {
+  const toScientificNotation = (num) => {
     // Check if the number is zero, return 0 in scientific notation
     if (num === 0) return "0";
 
