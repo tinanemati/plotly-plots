@@ -6,7 +6,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 
 export default function Heatmapconfig({ configValue, updateConfigValue }) {
-  const options = ["Standard","Scroll Zoom & Pan", "Update zMin", "Update zMax", "Reset"];
+  const options = ["Select (m/z) slices","Scroll Zoom & Pan", "Update zMin", "Update zMax", "Reset"];
   //console.log("this is the value:", configValue)
 
   const handleChange = (event) => {
