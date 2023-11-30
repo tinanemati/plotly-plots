@@ -3,7 +3,7 @@ import Plot from "react-plotly.js";
 import data from "../../sample-data.json"
 import Heatmapconfig from "../PlotConfig/Heatmapconfig";
 
-export default function Heatmap({ updatexData, updateyData }) {
+export default function Heatmap({ updatexData, updateyData, updateRegionData }) {
   const [arrayX, setArrayX] = useState([]);
   const [arrayY, setArrayY] = useState([]);
   const [arrayZ, setArrayZ] = useState([]);
@@ -87,12 +87,14 @@ export default function Heatmap({ updatexData, updateyData }) {
       const yValue = arrayY[clickedPointIndex];
       setHorizontalLinePosition(yValue);
       updateyData(arrayZ[clickedPointIndex]);
+      //updateRegionData([])
       setHoverActive(false); // Disable hover after click
     }
   };
 
   const handleDoubleClick = () => {
     setHoverActive(true);
+    updateRegionData([])
   };
 
   const handleWheel = (event) => {

@@ -5,6 +5,7 @@ import LinePlot from "./components/InteractivePlots/LinePlot";
 export default function App() {
   const [xData, setXdata] = useState([]);
   const [yData, setYdata] = useState([]);
+  const [regionData, setRegionData] = useState([]);
 
   const updatexData = (newData) => {
     setXdata(newData);
@@ -14,17 +15,33 @@ export default function App() {
     setYdata(newData);
   };
 
+  const updateRegionData = (newData) => {
+    setRegionData(newData);
+  };
+
+  console.log("this is my regionData for line plot and table: ", regionData);
   /* Testing
   console.log("this is my xData for line plotL: ", xData)
   console.log("this is my yData for line plot", yData)
-  console.log("this is my zData for line plotL: ", zData);
+  
   */
   return (
     <div>
-      <h1 style={{display:"flex", justifyContent: "center"}}>Test Interactive Plots</h1>
+      <h1 style={{ display: "flex", justifyContent: "center" }}>
+        Test Interactive Plots
+      </h1>
 
-      <Heatmap updatexData={updatexData} updateyData={updateyData} />
-      <LinePlot xData={xData} yData={yData} />
+      <Heatmap
+        updatexData={updatexData}
+        updateyData={updateyData}
+        updateRegionData={updateRegionData}
+      />
+      <LinePlot
+        xData={xData}
+        yData={yData}
+        regionData={regionData}
+        updateRegionData={updateRegionData}
+      />
     </div>
   );
 }

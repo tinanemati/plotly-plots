@@ -3,7 +3,7 @@ import Plot from "react-plotly.js";
 import RegionTable from "../plotAg-grid/RegionTable";
 import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 
-export default function LinePlot({ xData, yData }) {
+export default function LinePlot({ xData, yData, updateRegionData, regionData }) {
   const [hoverActive, setHoverActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [index, setIndex] = useState(0);
@@ -47,13 +47,12 @@ export default function LinePlot({ xData, yData }) {
       setArea([]);
       setRange([]);
       setIndex(0);
-      setRegionData([])
+      updateRegionData([])
     } else {
       setHoverActive(false);
     }
   }, [configValue]);
 
-  const [regionData, setRegionData] = useState([])
   useEffect(() => {
     if (area.length > 0) {
       const updatedRegions = range.map((item, index) => {
@@ -74,10 +73,23 @@ export default function LinePlot({ xData, yData }) {
         };
       });
 
-      setRegionData(updatedRegions);
+      updateRegionData(updatedRegions);
     }
   }, [area]);
   console.log("this is the data for table:", regionData)
+
+  useEffect(() => {
+    if (regionData.length == 0) {
+      setHoverActive(false);
+      setLeftside(0);
+      setClickCount(0);
+      setArea([]);
+      setRange([]);
+      setIndex(0);
+      setConfigValue("Standard")
+    }
+  }, [regionData]);
+
   const scrollZoom = configValue === "Standard" ? true : false;
   const dragMode = configValue === "Standard" ? "pan" : false;
 
@@ -238,7 +250,7 @@ export default function LinePlot({ xData, yData }) {
         onDoubleClick={handleDoubleClick}
       />
       <div style={{height: "200px", width: "350px"}}>
-        <RegionTable regionData={regionData}/>
+        <RegionTable regionData={regionData} />
       </div>
     </div>
   );
