@@ -138,6 +138,7 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
 
   const scrollZoom = configValue === "Scroll Zoom" ? true : false;
   const dragMode = configValue === "Standard" ?  "pan" : false;
+  const doubleClickHandler = configValue === "Standard" ? handleDoubleClick : () => {};
 
   return (
     <div
@@ -203,7 +204,7 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
         }}
         onHover={handleHover}
         onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
+        onDoubleClick={doubleClickHandler}
         config={{ scrollZoom: scrollZoom, displaylogo: false, displayModeBar: false }}
       />
     </div>
