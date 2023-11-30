@@ -46,10 +46,16 @@ export default function Heatmap({
     if (num === 0) return "0";
 
     // Get the exponent for scientific notation
-    const exponent = Math.floor(Math.log10(Math.abs(num)));
+    let exponent = Math.ceil(Math.log10(Math.abs(num)));
 
     // Calculate the coefficient for scientific notation
-    const coefficient = num / Math.pow(10, exponent);
+    let coefficient = num / Math.pow(10, exponent);
+
+    // Adjust the coefficient if the absolute value of the coefficient is greater than or equal to 10
+    if (exponent >= 6) {
+      coefficient *= 10;
+      exponent -= 1;
+    }
 
     // Format the result in scientific notation
     return `${coefficient.toFixed(1)} × 10^${exponent}`;
