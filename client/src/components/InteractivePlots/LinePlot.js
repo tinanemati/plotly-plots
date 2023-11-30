@@ -90,9 +90,6 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
     }
   }, [regionData]);
 
-  const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
-  const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
-
   const handleHover = (data) => {
     if (hoverActive && clickCount === 1) {
       const hoverPointIndex = data.points[0].pointIndex;
@@ -183,6 +180,11 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
     };
     makeRequest();
   }, [clickCount]);
+
+  const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
+  const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
+  const doubleClickHandler = configValue === "Integration" ? handleDoubleClick : () => {};
+
   return (
     <div
       className="lineplot-style"
@@ -246,7 +248,7 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
         }}
         onHover={handleHover}
         onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
+        onDoubleClick={doubleClickHandler}
       />
       <div style={{height: "200px", width: "350px"}}>
         <RegionTable regionData={regionData} />
