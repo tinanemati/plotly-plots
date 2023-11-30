@@ -19,10 +19,10 @@ export default function App() {
     setRegionData(newData);
   };
 
-  console.log("this is my regionData for line plot and table: ", regionData);
   /* Testing
   console.log("this is my xData for line plotL: ", xData)
   console.log("this is my yData for line plot", yData)
+  console.log("this is my regionData for line plot and table: ", regionData);
   
   */
   return (
