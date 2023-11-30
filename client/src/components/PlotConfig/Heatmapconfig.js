@@ -29,16 +29,22 @@ export default function Heatmapconfig({
     updateConfigValue(event.target.value);
   };
   useEffect(() => {
-    if (zMaxSci && zMaxSci) {
+    if (zMaxSci) {
       // Extract the coefficient and exponent from the scientific string
       const [coefficientMax, exponentMax] = zMaxSci.split(" × 10^");
       setCoefficientMax(coefficientMax);
       setExponentMax(exponentMax);
+    }
+  }, [zMaxSci]);
+
+  useEffect(() => {
+    if (zMinSci) {
+      // Extract the coefficient and exponent from the scientific string
       const [coefficientMin, exponentMin] = zMinSci.split(" × 10^");
       setCoefficientMin(coefficientMin);
       setExponentMin(exponentMin);
     }
-  }, [zMaxSci, zMinSci]);
+  }, [zMinSci]);
 
   return (
     <FormControl sx={{ display: "flex" }}>
@@ -55,7 +61,14 @@ export default function Heatmapconfig({
             value={option}
             control={<Radio />}
             label={
-              option === "Update zMin" ? (
+              option === "Update zMax" ? (
+                <span>
+                  {option}{" "}
+                  <strong>
+                    {coefficientMax} x 10 <sup>{exponentMax}</sup>
+                  </strong>
+                </span>
+              ) : option === "Update zMin" ? (
                 <span>
                   {option}{" "}
                   {coefficientMin !== "0" ? (
@@ -65,13 +78,6 @@ export default function Heatmapconfig({
                   ) : (
                     <strong>{coefficientMin}</strong>
                   )}
-                </span>
-              ) : option === "Update zMax" ? (
-                <span>
-                  {option}{" "}
-                  <strong>
-                    {coefficientMax} x 10 <sup>{exponentMax}</sup>
-                  </strong>
                 </span>
               ) : (
                 option

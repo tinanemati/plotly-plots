@@ -155,11 +155,17 @@ export default function Heatmap({
   };
   // Update zmin and zmax scientific based on the new value of zmin and zmax
   useEffect(() => {
-    if (zMax && zMin) {
+    if (zMin) {
       setZMinSci(toScientificNotation(parseFloat(zMin)));
+    }
+  }, [zMin]);
+
+  // Update zmin and zmax scientific based on the new value of zmin and zmax
+  useEffect(() => {
+    if (zMax) {
       setZMaxSci(toScientificNotation(parseFloat(zMax)));
     }
-  }, [zMin, zMax]);
+  }, [zMax]);
 
   useEffect(() => {
     if (configValue === "Reset") {
