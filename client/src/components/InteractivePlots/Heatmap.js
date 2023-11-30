@@ -139,6 +139,8 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
   const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
   const dragMode = configValue === "Scroll Zoom & Pan" ?  "pan" : false;
   const doubleClickHandler = configValue === "Select (m/z) slices" ? handleDoubleClick : () => {};
+  const onHoverHandler = configValue === "Select (m/z) slices" ? handleHover : () => {};
+  const onClickHandler = configValue === "Select (m/z) slices" ? handleClick : () => {};
 
   return (
     <div
@@ -167,6 +169,7 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
             colorbar: {
               len: 0.8,
               thickness: 20,
+              exponentformat: "power"
             },
           },
         ]}
@@ -202,8 +205,8 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
           ],
           dragmode: dragMode, 
         }}
-        onHover={handleHover}
-        onClick={handleClick}
+        onHover={onHoverHandler}
+        onClick={onClickHandler}
         onDoubleClick={doubleClickHandler}
         config={{ scrollZoom: scrollZoom, displayModeBar: false }}
       />
