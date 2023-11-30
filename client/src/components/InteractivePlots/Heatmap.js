@@ -55,7 +55,7 @@ export default function Heatmap({
     // Format the result in scientific notation
     return `${coefficient.toFixed(1)} × 10^${exponent}`;
   }
-  
+
   // Calculate zmin and zmax from arrayZ data
   useEffect(() => {
     if (arrayZ.length > 0) {
@@ -192,6 +192,8 @@ export default function Heatmap({
       <Heatmapconfig
         configValue={configValue}
         updateConfigValue={updateConfigValue}
+        zMaxSci={zMaxSci}
+        zMinSci={zMinSci}
       />
       <Plot
         data={[
