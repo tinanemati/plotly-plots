@@ -242,7 +242,6 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
         }}
         config={{
           scrollZoom: scrollZoom,
-          displaylogo: false,
           displayModeBar: false,
         }}
         onHover={handleHover}

@@ -205,7 +205,7 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
         onHover={handleHover}
         onClick={handleClick}
         onDoubleClick={doubleClickHandler}
-        config={{ scrollZoom: scrollZoom, displaylogo: false, displayModeBar: false }}
+        config={{ scrollZoom: scrollZoom, displayModeBar: false }}
       />
     </div>
   );
