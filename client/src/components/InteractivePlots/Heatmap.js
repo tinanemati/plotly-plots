@@ -136,8 +136,8 @@ export default function Heatmap({ updatexData, updateyData, updateRegionData }) 
     }
   }, [configValue]);
 
-  const scrollZoom = configValue === "Scroll Zoom" ? true : false;
-  const dragMode = configValue === "Standard" ?  "pan" : false;
+  const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
+  const dragMode = configValue === "Scroll Zoom & Pan" ?  "pan" : false;
   const doubleClickHandler = configValue === "Standard" ? handleDoubleClick : () => {};
 
   return (
