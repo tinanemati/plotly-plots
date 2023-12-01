@@ -65,6 +65,7 @@ export default function Heatmapconfig({
                 <span>
                   {option}{" "}
                   <strong>
+                    {"zMax: "}
                     {coefficientMax} x 10 <sup>{exponentMax}</sup>
                   </strong>
                 </span>
@@ -73,10 +74,14 @@ export default function Heatmapconfig({
                   {option}{" "}
                   {coefficientMin !== "0" ? (
                     <strong>
+                      {"zMin: "}
                       {coefficientMin} x 10<sup>{exponentMin}</sup>
                     </strong>
                   ) : (
-                    <strong>{coefficientMin}</strong>
+                    <strong>
+                      {"zMin: "}
+                      {coefficientMin}
+                    </strong>
                   )}
                 </span>
               ) : (

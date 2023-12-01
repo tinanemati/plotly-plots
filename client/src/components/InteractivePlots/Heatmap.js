@@ -220,7 +220,7 @@ export default function Heatmap({
             zmin: zMin,
             zauto: false,
             colorbar: {
-              len: 0.8,
+              len: 0.6,
               thickness: 20,
               exponentformat: "power",
             },
