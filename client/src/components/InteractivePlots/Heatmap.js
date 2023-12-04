@@ -224,6 +224,9 @@ export default function Heatmap({
               thickness: 20,
               exponentformat: "power",
             },
+            hovertemplate: `t: %{x}
+              <br>m/z: %{y}
+              <br>intensity: %{z}<extra></extra>`,
           },
         ]}
         layout={{
