@@ -3,7 +3,12 @@ import Plot from "react-plotly.js";
 import RegionTable from "../plotAg-grid/RegionTable";
 import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 
-export default function LinePlot({ xData, yData, updateRegionData, regionData }) {
+export default function LinePlot({
+  xData,
+  yData,
+  updateRegionData,
+  regionData,
+}) {
   const [hoverActive, setHoverActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [index, setIndex] = useState(0);
@@ -31,6 +36,7 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
     area
   );
   console.log("how many times i have been clicked:", clickCount);
+  console.log("is hover active:", hoverActive);
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -47,7 +53,7 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
       setArea([]);
       setRange([]);
       setIndex(0);
-      updateRegionData([])
+      updateRegionData([]);
     } else {
       setHoverActive(false);
     }
@@ -60,23 +66,24 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
         const channel = "MS 1";
         const power = Math.pow(10, 3);
         const { leftside, rightside } = item;
-        const calculatedArea =  Math.trunc(area[index].calculatedArea * power) / power;
-        const start_time = Math.trunc(xData[leftside] * power) / power
-        const end_time = Math.trunc(xData[rightside - 1] * power) / power
+        const calculatedArea =
+          Math.trunc(area[index].calculatedArea * power) / power;
+        const start_time = Math.trunc(xData[leftside] * power) / power;
+        const end_time = Math.trunc(xData[rightside - 1] * power) / power;
         const timeRange = `[${start_time} : ${end_time}]`;
 
         return {
           Name: regionName,
           Channel: channel,
           TimeRange: timeRange,
-          CalculatedArea: calculatedArea
+          CalculatedArea: calculatedArea,
         };
       });
 
       updateRegionData(updatedRegions);
     }
   }, [area]);
-  console.log("this is the data for table:", regionData)
+  console.log("this is the data for table:", regionData);
 
   useEffect(() => {
     if (regionData.length == 0) {
@@ -86,7 +93,7 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
       setArea([]);
       setRange([]);
       setIndex(0);
-      setConfigValue("Scroll Zoom & Pan")
+      setConfigValue("Scroll Zoom & Pan");
     }
   }, [regionData]);
 
@@ -100,8 +107,17 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
 
   const handleClick = (data) => {
     if (hoverActive) {
-      // Increase the click count by 1 each time the plot is clicked
-      setClickCount((prevCount) => prevCount + 1);
+      // check if we currently have any regions and the point that was clicked is the same as the rightside
+      if (
+        range.length > 0 &&
+        data.points[0].x === xData[range[index].rightside - 1]
+      ) {
+        // update clicked count to '1'
+        setClickCount(1);
+      } else {
+        // Increase the click count by 1 each time the plot is clicked
+        setClickCount((prevCount) => prevCount + 1);
+      }
       // Check if it's the first or second time the button is clicked
       if (clickCount === 0) {
         //console.log("This is the first time you clicked.");
@@ -183,7 +199,8 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
 
   const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
   const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
-  const doubleClickHandler = configValue === "Integration" ? handleDoubleClick : () => {};
+  const doubleClickHandler =
+    configValue === "Integration" ? handleDoubleClick : () => {};
 
   return (
     <div
@@ -216,9 +233,7 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
                 line: {
                   color: "#1975d2",
                 },
-                name: area[index]
-                  ? `Region ${index + 1}`
-                  : undefined,
+                name: area[index] ? `Region ${index + 1}` : undefined,
               }))
             : [
                 {
@@ -250,7 +265,7 @@ export default function LinePlot({ xData, yData, updateRegionData, regionData })
         onClick={handleClick}
         onDoubleClick={doubleClickHandler}
       />
-      <div style={{height: "200px", width: "350px"}}>
+      <div style={{ height: "200px", width: "350px" }}>
         <RegionTable regionData={regionData} />
       </div>
     </div>
