@@ -25,8 +25,8 @@ export default function Heatmap({
   };
 
   //console.log("this is the configValue:", configValue);
-  console.log("this is the state of zmin and zmax:", zMin, zMax);
-  console.log("this is the state of zminSci and zmaxSci:", zMinSci, zMaxSci);
+  // console.log("this is the state of zmin and zmax:", zMin, zMax);
+  // console.log("this is the state of zminSci and zmaxSci:", zMinSci, zMaxSci);
 
   // console.log("this is arrayZ: ", arrayZ);
   // console.log(
