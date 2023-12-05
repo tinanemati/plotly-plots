@@ -12,6 +12,7 @@ export default function StackedPlots() {
     x: xData,
     y: yData,
     type: "heatmap",
+    colorscale: "Viridis",
     colorbar: {
       len: 0.4,
       thickness: 20,
