@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
 import sampleData from "../../sample-data.json";
 
-export default function StackedPlots() {
-  const xData = sampleData.columns;
-  const yData = sampleData.index;
-  const zData = sampleData.values;
+export default function StackedPlots({ xData, yData }) {
+  const arrayX = sampleData.columns;
+  const arrayY = sampleData.index;
+  const arrayZ = sampleData.values;
 
   var trace1 = {
-    z: zData,
-    x: xData,
-    y: yData,
+    z: arrayZ,
+    x: arrayX,
+    y: arrayY,
     type: "heatmap",
     colorscale: "Viridis",
     colorbar: {
@@ -24,11 +24,14 @@ export default function StackedPlots() {
   };
 
   var trace2 = {
-    x: [2, 3, 4],
-    y: [100, 110, 120],
+    x: xData,
+    y: yData,
     xaxis: "x2",
     yaxis: "y2",
+    name: "(m/z) slice",
     type: "scatter",
+    mode: "lines+markers",
+    marker: { color: "#6ECEB2" },
   };
 
   const data = [trace1, trace2];

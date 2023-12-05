@@ -43,7 +43,7 @@ export default function App() {
         regionData={regionData}
         updateRegionData={updateRegionData}
       />
-      <StackedPlots />
+      <StackedPlots xData={xData} yData={yData} />
     </div>
   );
 }
