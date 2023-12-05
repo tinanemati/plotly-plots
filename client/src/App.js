@@ -32,8 +32,6 @@ export default function App() {
       </h1>
 
       <Heatmap
-        yTitle={yTitle}
-        updateyTitle={updateyTitle}
         xData={xData}
         yData={yData}
         updatexData={updatexData}
