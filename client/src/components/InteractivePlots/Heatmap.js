@@ -4,6 +4,8 @@ import data from "../../sample-data.json";
 import Heatmapconfig from "../PlotConfig/Heatmapconfig";
 
 export default function Heatmap({
+  xData,
+  yData,
   updatexData,
   updateyData,
   updateRegionData,
@@ -220,7 +222,7 @@ export default function Heatmap({
             zmin: zMin,
             zauto: false,
             colorbar: {
-              len: 0.6,
+              len: 0.3,
               thickness: 20,
               exponentformat: "power",
             },
@@ -228,8 +230,24 @@ export default function Heatmap({
               <br>m/z: %{y}
               <br>intensity: %{z}<extra></extra>`,
           },
+          {
+            x: xData,
+            y: yData,
+            xaxis: "x2",
+            yaxis: "y2",
+            name: "(m/z) slice",
+            type: "scatter",
+            mode: "lines+markers",
+            marker: { color: "#6ECEB2" },
+          },
         ]}
         layout={{
+          grid: {
+            rows: 2,
+            columns: 1,
+            pattern: "independent",
+            roworder: "bottom to top",
+          },
           width: 950,
           height: 570,
           title: "Total Ion Chromatogram",
@@ -244,6 +262,7 @@ export default function Heatmap({
               text: "(m/z)",
             },
           },
+          yaxis2: { title: `Ion Count (m/z=${horizontalLinePosition})` },
           shapes: [
             {
               type: "line",

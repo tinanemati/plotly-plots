@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Heatmap from "./components/InteractivePlots/Heatmap";
 import LinePlot from "./components/InteractivePlots/LinePlot";
-import StackedPlots from "./components/Plots/StackedPlots";
 
 export default function App() {
   const [xData, setXdata] = useState([]);
@@ -33,6 +32,10 @@ export default function App() {
       </h1>
 
       <Heatmap
+        yTitle={yTitle}
+        updateyTitle={updateyTitle}
+        xData={xData}
+        yData={yData}
         updatexData={updatexData}
         updateyData={updateyData}
         updateRegionData={updateRegionData}
@@ -43,7 +46,6 @@ export default function App() {
         regionData={regionData}
         updateRegionData={updateRegionData}
       />
-      <StackedPlots xData={xData} yData={yData} />
     </div>
   );
 }
