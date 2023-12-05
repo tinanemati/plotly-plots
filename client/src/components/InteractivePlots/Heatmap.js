@@ -225,6 +225,7 @@ export default function Heatmap({
               len: 0.3,
               thickness: 20,
               exponentformat: "power",
+              y: 0.2,
             },
             hovertemplate: `t: %{x}
               <br>m/z: %{y}
@@ -250,11 +251,13 @@ export default function Heatmap({
           },
           width: 950,
           height: 570,
-          title: "Total Ion Chromatogram",
+          title: "Total Ion Chromatogram & Extracted Ion Chromatogram",
           xaxis: {
             title: {
               text: "Retention Time (Minutes)",
             },
+            //range: [0, arrayX[arrayX.length - 1]],
+            dtick: 0.5,
           },
           yaxis: {
             autorange: "reversed",
@@ -262,6 +265,7 @@ export default function Heatmap({
               text: "(m/z)",
             },
           },
+          xaxis2: { dtick: 0.5 },
           yaxis2: { title: `Ion Count (m/z=${horizontalLinePosition})` },
           shapes: [
             {
