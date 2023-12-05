@@ -254,7 +254,8 @@ export default function Heatmap({
               y0: horizontalLinePosition,
               y1: horizontalLinePosition,
               line: {
-                color: "#6ECEB2",
+                dash: "dash",
+                color: "#e5e9ec",
                 width: 2,
               },
             },
