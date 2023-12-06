@@ -285,8 +285,25 @@ export default function Heatmap({
           ],
           dragmode: dragMode,
         }}
-        onHover={onHoverHandler}
-        onClick={onClickHandler}
+        onHover={(data) => {
+          const isHeatmapTrace = data.points[0].data.type === "heatmap"; // Check if hovered trace is the heatmap 
+          console.log("this is data:", data, "this is the heatmap check:", isHeatmapTrace)
+          if (isHeatmapTrace) {
+            // Handle hover for the heatmap trace
+            onHoverHandler(data);
+          }
+        }}
+        onClick={(data) => {
+          const isHeatmapTrace = data.points[0].data.type === "heatmap"; // Check if clicked trace is the heatmap 
+          console.log("this is data:", data, "this is the heatmap check:", isHeatmapTrace)
+          if (isHeatmapTrace) {
+            // Handle click for the heatmap trace
+            onClickHandler(data);
+          }
+        }}
+        
+        // onHover={onHoverHandler}
+        // onClick={onClickHandler}
         onDoubleClick={doubleClickHandler}
         config={{ scrollZoom: scrollZoom, displayModeBar: false }}
       />
