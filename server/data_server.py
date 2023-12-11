@@ -36,8 +36,6 @@ def well():
     return jsonify(wellData)
 
 # Route that gives the path and channel that we need to process
-
-
 @app.route('/area', methods=['POST'])
 def area():
     try:
