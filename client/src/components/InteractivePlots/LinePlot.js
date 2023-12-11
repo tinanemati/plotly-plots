@@ -37,7 +37,7 @@ export default function LinePlot({
     area
   );
   console.log("how many times i have been clicked:", clickCount);
-  console.log("is hover active:", hoverActive);
+  //console.log("is hover active:", hoverActive);
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -84,7 +84,7 @@ export default function LinePlot({
       updateRegionData(updatedRegions);
     }
   }, [area]);
-  console.log("this is the data for table:", regionData);
+  //console.log("this is the data for table:", regionData);
 
   useEffect(() => {
     if (regionData.length === 0) {
