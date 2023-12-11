@@ -221,7 +221,7 @@ export default function LinePlot({
             y: yData,
             name: `(m/z) slice`,
             type: "scatter",
-            mode: "lines+markers",
+            mode: "lines",
             marker: { color: "#6ECEB2" },
           },
           ...(range.length > 0

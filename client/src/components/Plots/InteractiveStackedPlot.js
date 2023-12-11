@@ -3,7 +3,9 @@ import Plot from "react-plotly.js";
 import data from "../../sample-data.json";
 import Heatmapconfig from "../PlotConfig/Heatmapconfig";
 
-export default function Heatmap({
+export default function InteractiveStackedPlot({
+  xData,
+  yData,
   updatexData,
   updateyData,
   updateRegionData,
@@ -220,16 +222,33 @@ export default function Heatmap({
             zmin: zMin,
             zauto: false,
             colorbar: {
-              len: 0.6,
+              len: 0.3,
               thickness: 20,
               exponentformat: "power",
+              y: 0.2,
             },
             hovertemplate: `t: %{x}
               <br>m/z: %{y}
               <br>intensity: %{z}<extra></extra>`,
           },
+          {
+            x: xData,
+            y: yData,
+            xaxis: "x2",
+            yaxis: "y2",
+            name: "(m/z) slice",
+            type: "scatter",
+            mode: "lines+markers",
+            marker: { color: "#6ECEB2" },
+          },
         ]}
         layout={{
+          grid: {
+            rows: 2,
+            columns: 1,
+            pattern: "independent",
+            roworder: "bottom to top",
+          },
           width: 950,
           height: 570,
           title: "Total Ion Chromatogram & Extracted Ion Chromatogram",
@@ -237,6 +256,7 @@ export default function Heatmap({
             title: {
               text: "Retention Time (Minutes)",
             },
+            //range: [0, arrayX[arrayX.length - 1]],
             dtick: 0.5,
           },
           yaxis: {
@@ -245,6 +265,8 @@ export default function Heatmap({
               text: "(m/z)",
             },
           },
+          xaxis2: { dtick: 0.5 },
+          yaxis2: { title: `Ion Count (m/z=${horizontalLinePosition})` },
           shapes: [
             {
               type: "line",
@@ -263,8 +285,25 @@ export default function Heatmap({
           ],
           dragmode: dragMode,
         }}
-        onHover={onHoverHandler}
-        onClick={onClickHandler}
+        onHover={(data) => {
+          const isHeatmapTrace = data.points[0].data.type === "heatmap"; // Check if hovered trace is the heatmap 
+          console.log("this is data:", data, "this is the heatmap check:", isHeatmapTrace)
+          if (isHeatmapTrace) {
+            // Handle hover for the heatmap trace
+            onHoverHandler(data);
+          }
+        }}
+        onClick={(data) => {
+          const isHeatmapTrace = data.points[0].data.type === "heatmap"; // Check if clicked trace is the heatmap 
+          console.log("this is data:", data, "this is the heatmap check:", isHeatmapTrace)
+          if (isHeatmapTrace) {
+            // Handle click for the heatmap trace
+            onClickHandler(data);
+          }
+        }}
+        
+        // onHover={onHoverHandler}
+        // onClick={onClickHandler}
         onDoubleClick={doubleClickHandler}
         config={{ scrollZoom: scrollZoom, displayModeBar: false }}
       />
