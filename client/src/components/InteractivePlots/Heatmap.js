@@ -7,11 +7,12 @@ export default function Heatmap({
   updatexData,
   updateyData,
   updateRegionData,
+  horizontalLinePosition,
+  updatehorizontalLinePosition
 }) {
   const [arrayX, setArrayX] = useState([]);
   const [arrayY, setArrayY] = useState([]);
   const [arrayZ, setArrayZ] = useState([]);
-  const [horizontalLinePosition, setHorizontalLinePosition] = useState();
   const [hoverActive, setHoverActive] = useState(true);
   const [zMin, setZMin] = useState(null);
   const [zMax, setZMax] = useState(null);
@@ -98,7 +99,7 @@ export default function Heatmap({
     setArrayX(xData);
     setArrayY(yData);
     setArrayZ(zData);
-    setHorizontalLinePosition(yData[0]);
+    updatehorizontalLinePosition(yData[0]);
     updateyData(zData[0]);
     updatexData(xData);
   }, []);
@@ -107,7 +108,7 @@ export default function Heatmap({
     if (hoverActive) {
       const clickedPointIndex = data.points[0].pointIndex[0];
       const yValue = arrayY[clickedPointIndex]; // Get the y-axis value where the user clicked
-      setHorizontalLinePosition(yValue);
+      updatehorizontalLinePosition(yValue);
       updateyData(arrayZ[clickedPointIndex]);
       //console.log("onHover", data.points[0], "testing finding x using pointIndex:", arrayZ[data.points[0].pointIndex[0]])
     }
@@ -117,7 +118,7 @@ export default function Heatmap({
     if (hoverActive) {
       const clickedPointIndex = data.points[0].pointIndex[0];
       const yValue = arrayY[clickedPointIndex];
-      setHorizontalLinePosition(yValue);
+      updatehorizontalLinePosition(yValue);
       updateyData(arrayZ[clickedPointIndex]);
       //updateRegionData([])
       setHoverActive(false); // Disable hover after click

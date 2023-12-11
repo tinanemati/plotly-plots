@@ -6,6 +6,7 @@ export default function App() {
   const [xData, setXdata] = useState([]);
   const [yData, setYdata] = useState([]);
   const [regionData, setRegionData] = useState([]);
+  const [horizontalLinePosition, setHorizontalLinePosition] = useState();
 
   const updatexData = (newData) => {
     setXdata(newData);
@@ -13,6 +14,10 @@ export default function App() {
 
   const updateyData = (newData) => {
     setYdata(newData);
+  };
+
+  const updatehorizontalLinePosition = (newData) => {
+    setHorizontalLinePosition(newData);
   };
 
   const updateRegionData = (newData) => {
@@ -32,16 +37,17 @@ export default function App() {
       </h1>
 
       <Heatmap
-        xData={xData}
-        yData={yData}
         updatexData={updatexData}
         updateyData={updateyData}
         updateRegionData={updateRegionData}
+        horizontalLinePosition={horizontalLinePosition}
+        updatehorizontalLinePosition={updatehorizontalLinePosition}
       />
       <LinePlot
         xData={xData}
         yData={yData}
         regionData={regionData}
+        horizontalLinePosition={horizontalLinePosition}
         updateRegionData={updateRegionData}
       />
     </div>

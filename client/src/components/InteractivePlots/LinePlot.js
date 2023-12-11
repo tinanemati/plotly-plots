@@ -6,6 +6,7 @@ import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 export default function LinePlot({
   xData,
   yData,
+  horizontalLinePosition,
   updateRegionData,
   regionData,
 }) {
@@ -254,7 +255,7 @@ export default function LinePlot({
             title: "Retention Time (Minute)",
           },
           yaxis: {
-            title: "Ion Count",
+            title:  `Ion Count (m/z=${horizontalLinePosition})`,
           },
           dragmode: dragMode,
         }}
