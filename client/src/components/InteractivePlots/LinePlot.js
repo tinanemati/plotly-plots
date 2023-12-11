@@ -86,7 +86,7 @@ export default function LinePlot({
   console.log("this is the data for table:", regionData);
 
   useEffect(() => {
-    if (regionData.length == 0) {
+    if (regionData.length === 0) {
       setHoverActive(false);
       setLeftside(0);
       setClickCount(0);
