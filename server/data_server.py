@@ -17,8 +17,6 @@ datafile = datadir.get_file("MSD1.MS")
 data = datafile.data.T
 
 # Well data information that uses the path to the well we are looking for
-
-
 @app.route('/well')
 def well():
     # Extract the requested masses from the file
