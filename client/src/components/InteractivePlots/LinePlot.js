@@ -153,14 +153,18 @@ export default function LinePlot({
     const makeRequest = async () => {
       if (clickCount === 2) {
         const dataToSend = {
-          xDataRange: xData.slice(
-            range[index].leftside,
-            range[index].rightside
-          ),
-          yDataRange: yData.slice(
-            range[index].leftside,
-            range[index].rightside
-          ),
+          // xDataRange: xData.slice(
+          //   range[index].leftside,
+          //   range[index].rightside
+          // ),
+          // yDataRange: yData.slice(
+          //   range[index].leftside,
+          //   range[index].rightside
+          // ),
+          range: range[index],
+          xData: xData,
+          yData: yData,
+          baseline: baseline,
         };
         try {
           const response = await fetch("/area", {
@@ -210,59 +214,45 @@ export default function LinePlot({
         updateConfigValue={updateConfigValue}
       />
       <Plot
-        data={[
-          {
-            x: xData,
-            y: yData,
-            name: `(m/z) slice`,
-            type: "scatter",
-            mode: "lines",
-            marker: { color: "#6ECEB2" },
-          },
-          (baseline.length > 0 // Check if baseline has data
-            ? {
+       data={[
+        {
+          x: xData,
+          y: yData,
+          name: `(m/z) slice`,
+          type: "scatter",
+          mode: "lines",
+          marker: { color: "#6ECEB2" },
+        },
+        ...(baseline.length > 0
+          ? [
+              {
                 x: xData,
                 y: baseline,
                 name: "generic baseline",
                 type: "scatter",
                 mode: "lines",
                 line: {
-                  dash: 'dot',
-                  width: 2
+                  dash: "dot",
+                  width: 2,
                 },
-                marker: { color: "rgb(2,3,129)"}
-              }
-            : [
-              {
-                // Placeholder data or an empty trace if range is empty
-                x: 0,
-                y: 0,
-                type: "scatter",
-                name: "No Data",
+                marker: { color: "rgb(2,3,129)" },
               },
-            ]),
-          ...(range.length > 0
-            ? range.map((item, index) => ({
-                x: xData.slice(item.leftside, item.rightside),
-                y: yData.slice(item.leftside, item.rightside),
-                fill: "tozeroy",
-                fillcolor: "#97ccc8",
-                type: "scatter",
-                line: {
-                  color: "#1975d2",
-                },
-                name: area[index] ? `Region ${index + 1}` : undefined,
-              }))
-            : [
-                {
-                  // Placeholder data or an empty trace if range is empty
-                  x: 0,
-                  y: 0,
-                  type: "scatter",
-                  name: "No Data",
-                },
-              ]),
-        ]}
+            ]
+          : []),
+        ...(range.length > 0
+          ? range.map((item, index) => ({
+              x: xData.slice(item.leftside, item.rightside),
+              y: yData.slice(item.leftside, item.rightside),
+              fill: "tozeroy",
+              fillcolor: "#97ccc8",
+              type: "scatter",
+              line: {
+                color: "#1975d2",
+              },
+              name: area[index] ? `Region ${index + 1}` : undefined,
+            }))
+          : []),
+      ]}
         layout={{
           width: 950,
           height: 570,

@@ -6,6 +6,7 @@ import pandas as pd
 from pandas import DataFrame
 import numpy as np
 from scipy.integrate import simpson
+from scipy.integrate import trapezoid
 
 # Create the app instance
 app = Flask(__name__)
@@ -46,7 +47,7 @@ def baseline():
         yData = data.get("yData")
         # create the most generic baseline
         baseline = [min(yData)] * len(yData)
-        
+
         response = {"baseline": baseline}
         return jsonify(response), 200
 
@@ -59,14 +60,23 @@ def area():
     try:
         # Retrieve data from the POST request
         data = request.get_json()
-        #print(data)
-        xDataRange = data.get("xDataRange")
-        yDataRange = data.get("yDataRange")
-        area = simpson(
+        yData = data.get("yData")
+        xData = data.get("xData")
+        range = data.get("range")
+        baseline = data.get("baseline")
+        # update the raw data according to baseline 
+        newYdata = [y - b for y, b in zip(yData, baseline)]
+        # slice the x and y data axis given the left and right side keys 
+        leftside = range['leftside']
+        rightside = range['rightside']
+
+        xDataRange = xData[leftside:rightside]  
+        yDataRange = newYdata[leftside:rightside]
+        # calulate the area given the updated yData
+        area = trapezoid(
             y=yDataRange,
             x=xDataRange
         )
-
         response = {"area": area}
         return jsonify(response), 200
 
