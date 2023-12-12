@@ -12,7 +12,7 @@ from scipy.integrate import trapezoid
 app = Flask(__name__)
 CORS(app)
 
-defaultFilename = "/Users/nemati/Documents/Trial-Data/5087258-0018 2023-07-11-SecondTrialData/5087258-0018_Data/018-D2F-B6-5087258-0018.D"
+defaultFilename = "../assests/data/001-D3F-A1-5068080-0015-4.D"
 # Extract the file from the directory
 datadir = rb.read(defaultFilename)
 datafile = datadir.get_file("MSD1.MS")
