@@ -274,6 +274,7 @@ export default function LinePlot({
           },
           yaxis: {
             title: `Ion Count (m/z=${horizontalLinePosition})`,
+            zeroline: false
           },
           dragmode: dragMode,
           shapes:
