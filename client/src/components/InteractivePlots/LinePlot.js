@@ -219,7 +219,7 @@ export default function LinePlot({
       : () => {};
 
   const markerColors = xData.map((_, index) =>
-    pointClicked.includes(index) ? "#fe0000" : "black"
+    pointClicked.includes(index) ? "#fe0000" : "#000"
   );
 
   return (
@@ -242,9 +242,10 @@ export default function LinePlot({
             name: `(m/z) slice`,
             type: "scatter",
             mode: "lines+markers",
-            marker: { color: markerColors, size: 4},
+            marker: { color: markerColors, size: 3},
             line: {
-              color: "black"
+              color: "#000",
+              width: 1
             }
           },
           ...(range.length > 0
