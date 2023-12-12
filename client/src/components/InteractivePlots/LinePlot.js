@@ -166,7 +166,10 @@ export default function LinePlot({
     setHoverActive(true);
     setClickCount(0);
   };
-
+  const handleDoubleClickBaseline = () => {
+    console.log("you double cliked on baseline feature")
+    setBaselineRange([])
+  };
   useEffect(() => {
     // make a request to the backend if click count is equal to two
     const makeRequest = async () => {
@@ -218,7 +221,11 @@ export default function LinePlot({
   const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
   const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
   const doubleClickHandler =
-    configValue === "Integration" ? handleDoubleClick : () => {};
+    configValue === "Integration" 
+    ? handleDoubleClick  
+    : configValue === "Baseline"
+    ? handleDoubleClickBaseline
+    : () => {};
   const clickHandler =
     configValue === "Integration"
       ? handleClickIntegration
