@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
-import data from "../../sample-data.json";
+import data from "../../test-data.json";
 import Heatmapconfig from "../PlotConfig/Heatmapconfig";
 
 export default function Heatmap({
   updatexData,
   updateyData,
   updateRegionData,
+  updateBaseline,
   horizontalLinePosition,
-  updatehorizontalLinePosition
+  updatehorizontalLinePosition,
 }) {
   const [arrayX, setArrayX] = useState([]);
   const [arrayY, setArrayY] = useState([]);
@@ -114,13 +115,37 @@ export default function Heatmap({
     }
   };
 
-  const handleClick = (data) => {
+  const handleClick = async (data) => {
     if (hoverActive) {
       const clickedPointIndex = data.points[0].pointIndex[0];
+      console.log("this is my m/z index:", clickedPointIndex);
       const yValue = arrayY[clickedPointIndex];
       updatehorizontalLinePosition(yValue);
       updateyData(arrayZ[clickedPointIndex]);
-      //updateRegionData([])
+      // POST request to backend with yData to calculate simple basline
+      try {
+        const dataToSend = { yData: arrayZ[clickedPointIndex] };
+        const response = await fetch("/baseline", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToSend), 
+        });
+
+        if (!response.ok) {
+          // Get the error message from server side and display to user
+          const errorData = await response.json();
+          console.log(errorData);
+        }
+
+        const responseData = await response.json();
+        updateBaseline(responseData.baseline)
+      } catch (error) {
+        console.error("Error:", error);
+        // Handle fetch errors
+      }
+
       setHoverActive(false); // Disable hover after click
     }
   };
@@ -128,6 +153,7 @@ export default function Heatmap({
   const handleDoubleClick = () => {
     setHoverActive(true);
     updateRegionData([]);
+    updateBaseline([])
   };
 
   const handleWheel = (event) => {
