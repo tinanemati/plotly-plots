@@ -138,9 +138,12 @@ export default function LinePlot({
   };
   const handleClickBaseline = (data) => {
     const clickedPointIndex = data.points[0].pointIndex;
+    const updatedClickedPoints = pointClicked.includes(clickedPointIndex)
+        ? pointClicked.filter((index) => index !== clickedPointIndex)
+        : [...pointClicked, clickedPointIndex];
+    setPointClicked(updatedClickedPoints)
     const xValue = xData[clickedPointIndex];
     const yValue = yData[clickedPointIndex];
-    data.points[0].data.marker.color = "#C54C82";
     console.log(
       "onClick",
       data.points[0],
@@ -158,6 +161,7 @@ export default function LinePlot({
   const handleDoubleClickBaseline = () => {
     //console.log("you double cliked on baseline feature")
     setBaselineRange([]);
+    setPointClicked([])
   };
   useEffect(() => {
     // make a request to the backend if click count is equal to two
@@ -215,7 +219,7 @@ export default function LinePlot({
       : () => {};
 
   const markerColors = xData.map((_, index) =>
-    pointClicked.includes(index) ? "#1058a4" : "#6ECEB2"
+    pointClicked.includes(index) ? "#fe0000" : "black"
   );
 
   return (
@@ -238,7 +242,10 @@ export default function LinePlot({
             name: `(m/z) slice`,
             type: "scatter",
             mode: "lines+markers",
-            marker: { color: markerColors, size: 3},
+            marker: { color: markerColors, size: 4},
+            line: {
+              color: "black"
+            }
           },
           ...(range.length > 0
             ? range.map((item, index) => ({
@@ -275,7 +282,7 @@ export default function LinePlot({
               y1: baseline[baseline.length - 1],
               line: {
                 dash: "dot",
-                color: "rgb(2,3,129)",
+                color: "#5450e4",
                 width: 2,
               },
             },
