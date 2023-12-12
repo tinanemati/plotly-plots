@@ -101,7 +101,7 @@ export default function LinePlot({
     }
   };
 
-  const handleClick = (data) => {
+  const handleClickIntegration = (data) => {
     if (hoverActive) {
       // check if we currently have any regions and the point that was clicked is the same as the rightside
       if (
@@ -143,7 +143,17 @@ export default function LinePlot({
       }
     }
   };
-
+  const handleClickBaseline = (data) => {
+    console.log("you clicked on the baseline feature");
+    const clickedPointIndex = data.points[0].pointIndex;
+    const xValue = xData[clickedPointIndex];
+    console.log(
+      "onClick",
+      data.points[0],
+      "testing finding left side x using pointIndex:",
+      xValue
+    );
+  };
   const handleDoubleClick = () => {
     setHoverActive(true);
     setClickCount(0);
@@ -201,7 +211,12 @@ export default function LinePlot({
   const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
   const doubleClickHandler =
     configValue === "Integration" ? handleDoubleClick : () => {};
-
+  const clickHandler =
+    configValue === "Integration"
+      ? handleClickIntegration
+      : configValue === "Baseline"
+      ? handleClickBaseline
+      : () => {};
   return (
     <div
       className="lineplot-style"
@@ -215,45 +230,45 @@ export default function LinePlot({
         updateConfigValue={updateConfigValue}
       />
       <Plot
-       data={[
-        {
-          x: xData,
-          y: yData,
-          name: `(m/z) slice`,
-          type: "scatter",
-          mode: "lines",
-          marker: { color: "#6ECEB2" },
-        },
-        ...(baseline.length > 0
-          ? [
-              {
-                x: xData,
-                y: baseline,
-                name: "generic baseline",
-                type: "scatter",
-                mode: "lines",
-                line: {
-                  dash: "dot",
-                  width: 2,
+        data={[
+          {
+            x: xData,
+            y: yData,
+            name: `(m/z) slice`,
+            type: "scatter",
+            mode: "lines",
+            marker: { color: "#6ECEB2" },
+          },
+          ...(baseline.length > 0 && configValue !== "Baseline"
+            ? [
+                {
+                  x: xData,
+                  y: baseline,
+                  name: "generic baseline",
+                  type: "scatter",
+                  mode: "lines",
+                  line: {
+                    dash: "dot",
+                    width: 2,
+                  },
+                  marker: { color: "rgb(2,3,129)" },
                 },
-                marker: { color: "rgb(2,3,129)" },
-              },
-            ]
-          : []),
-        ...(range.length > 0 
-          ? range.map((item, index) => ({
-              x: xData.slice(item.leftside, item.rightside),
-              y: yData.slice(item.leftside, item.rightside),
-              fill: "tozeroy",
-              fillcolor: "#97ccc8",
-              type: "scatter",
-              line: {
-                color: "#1975d2",
-              },
-              name: area[index] ? `Region ${index + 1}` : undefined,
-            }))
-          : []),
-      ]}
+              ]
+            : []),
+          ...(range.length > 0
+            ? range.map((item, index) => ({
+                x: xData.slice(item.leftside, item.rightside),
+                y: yData.slice(item.leftside, item.rightside),
+                fill: "tozeroy",
+                fillcolor: "#97ccc8",
+                type: "scatter",
+                line: {
+                  color: "#1975d2",
+                },
+                name: area[index] ? `Region ${index + 1}` : undefined,
+              }))
+            : []),
+        ]}
         layout={{
           width: 950,
           height: 570,
@@ -271,7 +286,7 @@ export default function LinePlot({
           displayModeBar: false,
         }}
         onHover={handleHover}
-        onClick={handleClick}
+        onClick={clickHandler}
         onDoubleClick={doubleClickHandler}
       />
       <div style={{ height: "200px", width: "350px" }}>
