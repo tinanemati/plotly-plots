@@ -40,6 +40,7 @@ export default function LinePlot({
     }));
   };
   console.log("this is the baseline range we have:", baselineRange);
+  console.log("what is this?", Math.min(...baselineRange.xValues), Math.min(...baselineRange.yValues))
   console.log("this is the points we have clicked:", pointClicked);
   //console.log("how many times i have been clicked:", clickCount);
   //console.log("is hover active:", hoverActive);
@@ -158,7 +159,7 @@ export default function LinePlot({
   };
   const handleDoubleClickBaseline = () => {
     //console.log("you double cliked on baseline feature")
-    setBaselineRange([]);
+    setBaselineRange({ xValues: [], yValues: []});
     setPointClicked([]);
   };
   useEffect(() => {
@@ -289,7 +290,24 @@ export default function LinePlot({
                     },
                   },
                 ]
-              : [],
+              : configValue === "Baseline" && baselineRange.xValues.length > 0
+              ? [
+                {
+                  type: "line",
+                  xref: "x",
+                  x0: Math.min(...baselineRange.xValues),
+                  x1: Math.max(...baselineRange.xValues),
+                  yref: "y",
+                  y0: Math.min(...baselineRange.yValues),
+                  y1: Math.max(...baselineRange.yValues),
+                  line: {
+                    dash: "dot",
+                    color: "#5450e4",
+                    width: 2,
+                  },
+                },
+              ]
+              : []
         }}
         config={{
           scrollZoom: scrollZoom,
