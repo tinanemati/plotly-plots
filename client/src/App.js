@@ -5,7 +5,6 @@ import LinePlot from "./components/InteractivePlots/LinePlot";
 export default function App() {
   const [xData, setXdata] = useState([]);
   const [yData, setYdata] = useState([]);
-  const [yDataBase, setYdataBase] = useState([]);
   const [baseline, setBaseline] = useState([]);
   const [regionData, setRegionData] = useState([]);
   const [horizontalLinePosition, setHorizontalLinePosition] = useState();
@@ -18,9 +17,6 @@ export default function App() {
     setYdata(newData);
   };
 
-  const updateyDataBase = (newData) => {
-    setYdataBase(newData);
-  };
   const updateBaseline = (newData) => {
     setBaseline(newData);
   };
@@ -48,7 +44,6 @@ export default function App() {
         updatexData={updatexData}
         updateyData={updateyData}
         updateBaseline={updateBaseline}
-        updateyDataBase={updateyDataBase}
         updateRegionData={updateRegionData}
         horizontalLinePosition={horizontalLinePosition}
         updatehorizontalLinePosition={updatehorizontalLinePosition}
@@ -57,7 +52,6 @@ export default function App() {
         xData={xData}
         yData={yData}
         baseline={baseline}
-        yDataBase={yDataBase}
         regionData={regionData}
         horizontalLinePosition={horizontalLinePosition}
         updateRegionData={updateRegionData}
