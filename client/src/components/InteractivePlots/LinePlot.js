@@ -6,6 +6,7 @@ import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 export default function LinePlot({
   xData,
   yData,
+  baseline,
   horizontalLinePosition,
   updateRegionData,
   regionData,
@@ -28,15 +29,8 @@ export default function LinePlot({
     updatedareas[index] = { calculatedArea: newArea };
     setArea(updatedareas);
   };
-  console.log(
-    "this is the range we have:",
-    range,
-    "this is my index:",
-    index,
-    "this is my area:",
-    area
-  );
-  console.log("how many times i have been clicked:", clickCount);
+  //console.log("this is the range we have:", range);
+  //console.log("how many times i have been clicked:", clickCount);
   //console.log("is hover active:", hoverActive);
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
@@ -225,6 +219,28 @@ export default function LinePlot({
             mode: "lines",
             marker: { color: "#6ECEB2" },
           },
+          (baseline.length > 0 // Check if baseline has data
+            ? {
+                x: xData,
+                y: baseline,
+                name: "generic baseline",
+                type: "scatter",
+                mode: "lines",
+                line: {
+                  dash: 'dot',
+                  width: 2
+                },
+                marker: { color: "rgb(2,3,129)"}
+              }
+            : [
+              {
+                // Placeholder data or an empty trace if range is empty
+                x: 0,
+                y: 0,
+                type: "scatter",
+                name: "No Data",
+              },
+            ]),
           ...(range.length > 0
             ? range.map((item, index) => ({
                 x: xData.slice(item.leftside, item.rightside),
@@ -255,7 +271,7 @@ export default function LinePlot({
             title: "Retention Time (Minute)",
           },
           yaxis: {
-            title:  `Ion Count (m/z=${horizontalLinePosition})`,
+            title: `Ion Count (m/z=${horizontalLinePosition})`,
           },
           dragmode: dragMode,
         }}
