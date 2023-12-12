@@ -29,18 +29,25 @@ export default function LinePlot({
     updatedareas[index] = { calculatedArea: newArea };
     setArea(updatedareas);
   };
-  const [baselineRange, setBaselineRange] = useState({ xValues: [], yValues: []});
+  const [baselineRange, setBaselineRange] = useState({
+    xValues: [],
+    yValues: [],
+  });
   const [pointClicked, setPointClicked] = useState([]);
   // Function that will update the baseline range
   const updateBaselineRange = (xValue, yValue) => {
-    setBaselineRange(prevState => ({
+    setBaselineRange((prevState) => ({
       ...prevState,
       xValues: [...prevState.xValues, xValue],
       yValues: [...prevState.yValues, yValue],
     }));
   };
   console.log("this is the baseline range we have:", baselineRange);
-  console.log("what is this?", Math.min(...baselineRange.xValues), Math.min(...baselineRange.yValues))
+  console.log(
+    "what is this?",
+    Math.min(...baselineRange.xValues),
+    Math.min(...baselineRange.yValues)
+  );
   console.log("this is the points we have clicked:", pointClicked);
   //console.log("how many times i have been clicked:", clickCount);
   //console.log("is hover active:", hoverActive);
@@ -147,10 +154,7 @@ export default function LinePlot({
     setPointClicked(updatedClickedPoints);
     const xValue = xData[clickedPointIndex];
     const yValue = yData[clickedPointIndex];
-    console.log(
-      "onClick",
-      data.points[0],
-    );
+    console.log("onClick", data.points[0]);
     updateBaselineRange(xValue, yValue);
   };
   const handleDoubleClick = () => {
@@ -159,7 +163,7 @@ export default function LinePlot({
   };
   const handleDoubleClickBaseline = () => {
     //console.log("you double cliked on baseline feature")
-    setBaselineRange({ xValues: [], yValues: []});
+    setBaselineRange({ xValues: [], yValues: [] });
     setPointClicked([]);
   };
   useEffect(() => {
@@ -273,7 +277,7 @@ export default function LinePlot({
           },
           dragmode: dragMode,
           shapes:
-            configValue !== "Baseline"
+            baselineRange.xValues.length === 0
               ? [
                   {
                     type: "line",
@@ -290,24 +294,24 @@ export default function LinePlot({
                     },
                   },
                 ]
-              : configValue === "Baseline" && baselineRange.xValues.length > 0
+              : baselineRange.xValues.length > 0
               ? [
-                {
-                  type: "line",
-                  xref: "x",
-                  x0: Math.min(...baselineRange.xValues),
-                  x1: Math.max(...baselineRange.xValues),
-                  yref: "y",
-                  y0: Math.min(...baselineRange.yValues),
-                  y1: Math.max(...baselineRange.yValues),
-                  line: {
-                    dash: "dot",
-                    color: "#5450e4",
-                    width: 2,
+                  {
+                    type: "line",
+                    xref: "x",
+                    x0: Math.min(...baselineRange.xValues),
+                    x1: Math.max(...baselineRange.xValues),
+                    yref: "y",
+                    y0: Math.min(...baselineRange.yValues),
+                    y1: Math.max(...baselineRange.yValues),
+                    line: {
+                      dash: "dot",
+                      color: "#5450e4",
+                      width: 2,
+                    },
                   },
-                },
-              ]
-              : []
+                ]
+              : [],
         }}
         config={{
           scrollZoom: scrollZoom,
