@@ -29,13 +29,15 @@ export default function LinePlot({
     updatedareas[index] = { calculatedArea: newArea };
     setArea(updatedareas);
   };
-  const [baselineRange, setBaselineRange] = useState([]);
+  const [baselineRange, setBaselineRange] = useState({ xValues: [], yValues: []});
   const [pointClicked, setPointClicked] = useState([]);
   // Function that will update the baseline range
-  const updateBaselineRange = (time) => {
-    const updateBaselines = [...baselineRange];
-    updateBaselines.push(time);
-    setBaselineRange(updateBaselines);
+  const updateBaselineRange = (xValue, yValue) => {
+    setBaselineRange(prevState => ({
+      ...prevState,
+      xValues: [...prevState.xValues, xValue],
+      yValues: [...prevState.yValues, yValue],
+    }));
   };
   console.log("this is the baseline range we have:", baselineRange);
   console.log("this is the points we have clicked:", pointClicked);
@@ -143,13 +145,12 @@ export default function LinePlot({
       : [...pointClicked, clickedPointIndex];
     setPointClicked(updatedClickedPoints);
     const xValue = xData[clickedPointIndex];
+    const yValue = yData[clickedPointIndex];
     console.log(
       "onClick",
       data.points[0],
-      "testing finding left side x using pointIndex:",
-      xValue,
     );
-    updateBaselineRange(xValue);
+    updateBaselineRange(xValue, yValue);
   };
   const handleDoubleClick = () => {
     setHoverActive(true);
