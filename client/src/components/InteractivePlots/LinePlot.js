@@ -121,29 +121,13 @@ export default function LinePlot({
         // Increase the click count by 1 each time the plot is clicked
         setClickCount((prevCount) => prevCount + 1);
       }
-      // Check if it's the first or second time the button is clicked
+      // Check how many times the button has been clicked
       if (clickCount === 0) {
-        //console.log("This is the first time you clicked.");
         const clickPointIndex = data.points[0].pointIndex; // this will be the left side of our integral
-        //const xValue = xData[clickPointIndex];
-        // console.log(
-        //   "onClick",
-        //   data.points[0],
-        //   "testing finding left side x using pointIndex:",
-        //   xValue
-        // );
         setLeftside(clickPointIndex);
         setIndex(range.length);
       } else if (clickCount === 1) {
-        //console.log("This is the second time you clicked.");
         const clickPointIndex = data.points[0].pointIndex; // this will be the right side of our integral
-        // const xValue = xData[clickPointIndex];
-        // console.log(
-        //   "onClick",
-        //   data.points[0],
-        //   "testing finding right side x using pointIndex:",
-        //   xValue
-        // );
         setHoverActive(false); // after we get the second point stop listening for new points
         // Let's update the range here
         updateRange(index, leftside, clickPointIndex);
@@ -167,7 +151,7 @@ export default function LinePlot({
     setClickCount(0);
   };
   const handleDoubleClickBaseline = () => {
-    console.log("you double cliked on baseline feature")
+    //console.log("you double cliked on baseline feature")
     setBaselineRange([])
   };
   useEffect(() => {
@@ -175,14 +159,6 @@ export default function LinePlot({
     const makeRequest = async () => {
       if (clickCount === 2) {
         const dataToSend = {
-          // xDataRange: xData.slice(
-          //   range[index].leftside,
-          //   range[index].rightside
-          // ),
-          // yDataRange: yData.slice(
-          //   range[index].leftside,
-          //   range[index].rightside
-          // ),
           range: range[index],
           xData: xData,
           yData: yData,
