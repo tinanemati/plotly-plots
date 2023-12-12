@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
 import RegionTable from "../plotAg-grid/RegionTable";
 import Lineplotconfig from "../PlotConfig/Lineplotconfig";
-import { colors } from "@mui/material";
 
 export default function LinePlot({
   xData,
