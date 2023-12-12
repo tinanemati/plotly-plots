@@ -31,6 +31,7 @@ export default function LinePlot({
     setArea(updatedareas);
   };
   const [baselineRange, setBaselineRange] = useState([]);
+  const [pointClicked, setPointClicked] = useState([]);
   // Function that will update the baseline range
   const updateBaselineRange = (timeIndex, time) => {
     const updateBaselines = [...baselineRange];
@@ -44,6 +45,7 @@ export default function LinePlot({
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
   };
+
   useEffect(() => {
     if (configValue === "Integration") {
       setHoverActive(true);
@@ -147,7 +149,6 @@ export default function LinePlot({
       "and",
       yValue
     );
-    console.log("this is the color we have:", colors);
     updateBaselineRange(clickedPointIndex, xValue);
   };
   const handleDoubleClick = () => {
@@ -212,6 +213,11 @@ export default function LinePlot({
       : configValue === "Baseline"
       ? handleClickBaseline
       : () => {};
+
+  const markerColors = xData.map((_, index) =>
+    pointClicked.includes(index) ? "#1058a4" : "#6ECEB2"
+  );
+
   return (
     <div
       className="lineplot-style"
@@ -231,8 +237,8 @@ export default function LinePlot({
             y: yData,
             name: `(m/z) slice`,
             type: "scatter",
-            mode: "lines",
-            marker: { color: "#6ECEB2" },
+            mode: "lines+markers",
+            marker: { color: markerColors, size: 3},
           },
           ...(range.length > 0
             ? range.map((item, index) => ({
