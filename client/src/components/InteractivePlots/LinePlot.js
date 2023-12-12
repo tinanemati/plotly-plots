@@ -6,7 +6,6 @@ import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 export default function LinePlot({
   xData,
   yData,
-  newYData,
   baseline,
   horizontalLinePosition,
   updateRegionData,
@@ -33,12 +32,13 @@ export default function LinePlot({
   const [baselineRange, setBaselineRange] = useState([]);
   const [pointClicked, setPointClicked] = useState([]);
   // Function that will update the baseline range
-  const updateBaselineRange = (timeIndex, time) => {
+  const updateBaselineRange = (time) => {
     const updateBaselines = [...baselineRange];
-    updateBaselines.push({ newIndex: timeIndex, time: time });
+    updateBaselines.push(time);
     setBaselineRange(updateBaselines);
   };
   console.log("this is the baseline range we have:", baselineRange);
+  console.log("this is the points we have clicked:", pointClicked);
   //console.log("how many times i have been clicked:", clickCount);
   //console.log("is hover active:", hoverActive);
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
@@ -143,16 +143,13 @@ export default function LinePlot({
       : [...pointClicked, clickedPointIndex];
     setPointClicked(updatedClickedPoints);
     const xValue = xData[clickedPointIndex];
-    const yValue = yData[clickedPointIndex];
     console.log(
       "onClick",
       data.points[0],
       "testing finding left side x using pointIndex:",
       xValue,
-      "and",
-      yValue
     );
-    updateBaselineRange(clickedPointIndex, xValue);
+    updateBaselineRange(xValue);
   };
   const handleDoubleClick = () => {
     setHoverActive(true);
