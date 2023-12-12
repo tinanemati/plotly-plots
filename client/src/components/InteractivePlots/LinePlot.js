@@ -6,6 +6,7 @@ import Lineplotconfig from "../PlotConfig/Lineplotconfig";
 export default function LinePlot({
   xData,
   yData,
+  newYData,
   baseline,
   horizontalLinePosition,
   updateRegionData,
@@ -239,7 +240,7 @@ export default function LinePlot({
               },
             ]
           : []),
-        ...(range.length > 0
+        ...(range.length > 0 
           ? range.map((item, index) => ({
               x: xData.slice(item.leftside, item.rightside),
               y: yData.slice(item.leftside, item.rightside),

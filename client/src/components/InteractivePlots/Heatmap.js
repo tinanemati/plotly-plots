@@ -7,6 +7,7 @@ export default function Heatmap({
   updatexData,
   updateyData,
   updateRegionData,
+  updatenewYData,
   updateBaseline,
   horizontalLinePosition,
   updatehorizontalLinePosition,
@@ -141,6 +142,7 @@ export default function Heatmap({
 
         const responseData = await response.json();
         updateBaseline(responseData.baseline)
+        updatenewYData(responseData.newYdata)
       } catch (error) {
         console.error("Error:", error);
         // Handle fetch errors
@@ -153,7 +155,8 @@ export default function Heatmap({
   const handleDoubleClick = () => {
     setHoverActive(true);
     updateRegionData([]);
-    updateBaseline([])
+    updateBaseline([]);
+    updatenewYData([]);
   };
 
   const handleWheel = (event) => {

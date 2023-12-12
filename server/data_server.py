@@ -47,8 +47,9 @@ def baseline():
         yData = data.get("yData")
         # create the most generic baseline
         baseline = [min(yData)] * len(yData)
-
-        response = {"baseline": baseline}
+        # update the raw data according to baseline 
+        newYdata = [y - b for y, b in zip(yData, baseline)]
+        response = {"baseline": baseline, "newYdata": newYdata}
         return jsonify(response), 200
 
     except Exception as e:
