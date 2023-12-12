@@ -130,7 +130,7 @@ def baselineCorrection():
         selected_times = x_np[time_indices]
         # calculate area by trapezoidal rule
         area = np.trapz(y_np, selected_times)
-        response = {"area": area}
+        response = {"area": area, "baseline": baseline}
         return jsonify(response), 200
     except Exception as e:
         return jsonify({'error': str(e)})
