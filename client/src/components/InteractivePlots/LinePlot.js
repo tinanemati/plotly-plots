@@ -30,6 +30,13 @@ export default function LinePlot({
     updatedareas[index] = { calculatedArea: newArea };
     setArea(updatedareas);
   };
+  const [baselineRange, setBaselineRange] = useState([]); 
+  // Function that will update the baseline range
+  const updateBaselineRange = (timeIndex, time) => {
+    const updateBaselines = [...baselineRange]
+    updateBaselines.push({newIndex: timeIndex, time: time})
+    setBaselineRange(updateBaselines)
+  }
   //console.log("this is the range we have:", range);
   //console.log("how many times i have been clicked:", clickCount);
   //console.log("is hover active:", hoverActive);
