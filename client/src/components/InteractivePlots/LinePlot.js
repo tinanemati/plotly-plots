@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Plot from "react-plotly.js";
 import RegionTable from "../plotAg-grid/RegionTable";
 import Lineplotconfig from "../PlotConfig/Lineplotconfig";
+import { colors } from "@mui/material";
 
 export default function LinePlot({
   xData,
@@ -30,13 +31,13 @@ export default function LinePlot({
     updatedareas[index] = { calculatedArea: newArea };
     setArea(updatedareas);
   };
-  const [baselineRange, setBaselineRange] = useState([]); 
+  const [baselineRange, setBaselineRange] = useState([]);
   // Function that will update the baseline range
   const updateBaselineRange = (timeIndex, time) => {
-    const updateBaselines = [...baselineRange]
-    updateBaselines.push({newIndex: timeIndex, time: time})
-    setBaselineRange(updateBaselines)
-  }
+    const updateBaselines = [...baselineRange];
+    updateBaselines.push({ newIndex: timeIndex, time: time });
+    setBaselineRange(updateBaselines);
+  };
   console.log("this is the baseline range we have:", baselineRange);
   //console.log("how many times i have been clicked:", clickCount);
   //console.log("is hover active:", hoverActive);
@@ -137,14 +138,18 @@ export default function LinePlot({
   const handleClickBaseline = (data) => {
     const clickedPointIndex = data.points[0].pointIndex;
     const xValue = xData[clickedPointIndex];
-    const yValue = yData[clickedPointIndex]
+    const yValue = yData[clickedPointIndex];
+    data.points[0].data.marker.color = "#C54C82";
     console.log(
       "onClick",
       data.points[0],
       "testing finding left side x using pointIndex:",
-      xValue, "and", yValue
+      xValue,
+      "and",
+      yValue
     );
-    updateBaselineRange(clickedPointIndex, xValue)
+    console.log("this is the color we have:", colors);
+    updateBaselineRange(clickedPointIndex, xValue);
   };
   const handleDoubleClick = () => {
     setHoverActive(true);
@@ -152,7 +157,7 @@ export default function LinePlot({
   };
   const handleDoubleClickBaseline = () => {
     //console.log("you double cliked on baseline feature")
-    setBaselineRange([])
+    setBaselineRange([]);
   };
   useEffect(() => {
     // make a request to the backend if click count is equal to two
@@ -197,11 +202,11 @@ export default function LinePlot({
   const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
   const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
   const doubleClickHandler =
-    configValue === "Integration" 
-    ? handleDoubleClick  
-    : configValue === "Baseline"
-    ? handleDoubleClickBaseline
-    : () => {};
+    configValue === "Integration"
+      ? handleDoubleClick
+      : configValue === "Baseline"
+      ? handleDoubleClickBaseline
+      : () => {};
   const clickHandler =
     configValue === "Integration"
       ? handleClickIntegration
@@ -230,22 +235,6 @@ export default function LinePlot({
             mode: "lines",
             marker: { color: "#6ECEB2" },
           },
-          ...(baseline.length > 0 && configValue !== "Baseline"
-            ? [
-                {
-                  x: xData,
-                  y: baseline,
-                  name: "generic baseline",
-                  type: "scatter",
-                  mode: "lines",
-                  line: {
-                    dash: "dot",
-                    width: 2,
-                  },
-                  marker: { color: "rgb(2,3,129)" },
-                },
-              ]
-            : []),
           ...(range.length > 0
             ? range.map((item, index) => ({
                 x: xData.slice(item.leftside, item.rightside),
@@ -270,6 +259,22 @@ export default function LinePlot({
           yaxis: {
             title: `Ion Count (m/z=${horizontalLinePosition})`,
           },
+          shapes: [
+            {
+              type: "line",
+              xref: "x",
+              x0: xData[0],
+              x1: xData[xData.length - 1],
+              yref: "y",
+              y0: baseline[0],
+              y1: baseline[baseline.length - 1],
+              line: {
+                dash: "dot",
+                color: "rgb(2,3,129)",
+                width: 2,
+              },
+            },
+          ],
           dragmode: dragMode,
         }}
         config={{
