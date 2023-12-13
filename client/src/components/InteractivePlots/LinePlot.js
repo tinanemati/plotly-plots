@@ -121,6 +121,7 @@ export default function LinePlot({
   };
 
   const handleClickIntegration = (data) => {
+    console.log("we are here:", data.points[0])
     if (hoverActive) {
       // check if we currently have any regions and the point that was clicked is the same as the rightside
       if (
@@ -169,38 +170,70 @@ export default function LinePlot({
   useEffect(() => {
     // make a request to the backend if click count is equal to two
     const makeRequest = async () => {
-      if (clickCount === 2) {
-        const dataToSend = {
-          range: range[index],
-          xData: xData,
-          yData: yData,
-          baseline: baseline,
-        };
-        try {
-          const response = await fetch("/area", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(dataToSend),
-          });
+      if (clickCount === 2 && baselineRange.xValues.length === 0) {
+          const dataToSend = {
+            range: range[index],
+            xData: xData,
+            yData: yData,
+            baseline: baseline,
+          };
+          try {
+            const response = await fetch("/area", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(dataToSend),
+            });
 
-          if (!response.ok) {
-            // Get the error message from server side and display to user
-            const errorData = await response.json();
-            console.log(errorData);
+            if (!response.ok) {
+              // Get the error message from server side and display to user
+              const errorData = await response.json();
+              console.log(errorData);
+            }
+
+            const responseData = await response.json();
+            // console.log(
+            //   "this is my area calculated by the server:",
+            //   responseData.area
+            // );
+            updateArea(index, responseData.area);
+            // Handle further processing based on the backend response
+          } catch (error) {
+            console.error("Error:", error);
           }
-
-          const responseData = await response.json();
-          // console.log(
-          //   "this is my area calculated by the server:",
-          //   responseData.area
-          // );
-          updateArea(index, responseData.area);
-          // Handle further processing based on the backend response
-        } catch (error) {
-          console.error("Error:", error);
-        }
+        } else if (clickCount === 2 && baselineRange.xValues.length > 0) {
+          const dataToSend = {
+            xData: xData,
+            yData: yData,
+            baselineTimeRange: baselineRange.xValues,
+            regionTime: {min_time: xData[range[index].leftside], max_time: xData[range[index].rightside]},
+          };
+          try {
+            const response = await fetch("/baselineCorrection", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(dataToSend),
+            });
+  
+            if (!response.ok) {
+              // Get the error message from server side and display to user
+              const errorData = await response.json();
+              console.log(errorData);
+            }
+  
+            const responseData = await response.json();
+            console.log(
+              "this is my area calculated by the server:",
+              responseData.area
+            );
+            updateArea(index, responseData.area);
+            // Handle further processing based on the backend response
+          } catch (error) {
+            console.error("Error:", error);
+          } 
       }
     };
     makeRequest();
@@ -255,6 +288,8 @@ export default function LinePlot({
             ? range.map((item, index) => ({
                 x: xData.slice(item.leftside, item.rightside),
                 y: yData.slice(item.leftside, item.rightside),
+                xref: "y",
+                yref: "x",
                 fill: "tozeroy",
                 fillcolor: "#97ccc8",
                 type: "scatter",
@@ -274,7 +309,7 @@ export default function LinePlot({
           },
           yaxis: {
             title: `Ion Count (m/z=${horizontalLinePosition})`,
-            zeroline: false
+            zeroline: false,
           },
           dragmode: dragMode,
           shapes:

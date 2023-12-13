@@ -103,12 +103,14 @@ def baselineCorrection():
         y_data = data.get("yData")
         baseline_time_ranges = data.get("baselineTimeRange")
         region_time = data.get("regionTime")
+        print("this is region_time", region_time)
         # update the arrays to numpy so operation can be easier
         x_np = np.array(x_data)
         y_np = np.array(y_data)
         # perform baseline correction here
         noise_mask = np.zeros_like(x_np, dtype=bool)
         for noise_region in baseline_time_ranges:
+            print("in the for loop")
             x = x_np
             noise_start, noise_end = noise_region
             noise_mask |= (x >= noise_start) & (x <= noise_end)
@@ -117,12 +119,14 @@ def baselineCorrection():
             noise = y_data[noise_mask]
             spline = UnivariateSpline(noise_x, noise, k=1, s=1)
             baseline = spline(x)
-
+        print("outside the loop")
         # update the raw data with the baseline
         y_np = y_np - baseline
-
+        print("outside the loop")
         # extract the time region
         min_time, max_time = region_time.min_time, region_time.max_time
+        print("this is min_time", min_time)
+        print("this is max_time", max_time)
         time_indices = [i for i, time in enumerate(
             x_np) if min_time <= time <= max_time]
         # perform slicing to calculate area
@@ -130,7 +134,8 @@ def baselineCorrection():
         selected_times = x_np[time_indices]
         # calculate area by trapezoidal rule
         area = np.trapz(y_np, selected_times)
-        response = {"area": area, "baseline": baseline}
+        print("this is area:", area)
+        response = {"area": area, "baseline": baseline.tolist()}
         return jsonify(response), 200
     except Exception as e:
         return jsonify({'error': str(e)})
