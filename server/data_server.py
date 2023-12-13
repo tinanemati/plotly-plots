@@ -90,8 +90,8 @@ def area():
         leftside = range['leftside']
         rightside = range['rightside']
 
-        xDataRange = xData[leftside:rightside-1]
-        yDataRange = newYdata[leftside:rightside-1]
+        xDataRange = xData[leftside:rightside]
+        yDataRange = newYdata[leftside:rightside]
         # calulate the area given the updated yData
         area = trapezoid(
             y=yDataRange,

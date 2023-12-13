@@ -29,6 +29,7 @@ export default function LinePlot({
     updatedareas[index] = { calculatedArea: newArea };
     setArea(updatedareas);
   };
+  console.log("area:", area)
   const [baselineRange, setBaselineRange] = useState({
     xValues: [],
     yValues: [],
@@ -121,7 +122,6 @@ export default function LinePlot({
   };
 
   const handleClickIntegration = (data) => {
-    console.log("we are here:", data.points[0])
     if (hoverActive) {
       // check if we currently have any regions and the point that was clicked is the same as the rightside
       if (
@@ -171,6 +171,7 @@ export default function LinePlot({
     // make a request to the backend if click count is equal to two
     const makeRequest = async () => {
       if (clickCount === 2 && baselineRange.xValues.length === 0) {
+          console.log("I am in correct condition")
           const dataToSend = {
             range: range[index],
             xData: xData,
@@ -193,10 +194,10 @@ export default function LinePlot({
             }
 
             const responseData = await response.json();
-            // console.log(
-            //   "this is my area calculated by the server:",
-            //   responseData.area
-            // );
+            console.log(
+              "this is my area calculated by the server:",
+              responseData.area
+            );
             updateArea(index, responseData.area);
             // Handle further processing based on the backend response
           } catch (error) {
@@ -290,9 +291,8 @@ export default function LinePlot({
                 y: yData.slice(item.leftside, item.rightside),
                 xref: "y",
                 yref: "x",
-                fill: "tozeroy",
-                fillcolor: "#97ccc8",
                 type: "scatter",
+                mode: "lines",
                 line: {
                   color: "#1975d2",
                 },
