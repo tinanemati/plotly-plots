@@ -85,7 +85,7 @@ export default function LinePlot({
           Math.trunc(area[index].calculatedArea * power) / power;
         const start_time = Math.trunc(xData[leftside] * power) / power;
         const end_time = Math.trunc(xData[rightside - 1] * power) / power;
-        const timeRange = `[${start_time} : ${end_time}]`;
+        const timeRange = `[${start_time} : ${end_time})`;
 
         return {
           Name: regionName,
@@ -237,7 +237,7 @@ export default function LinePlot({
       }
     };
     makeRequest();
-  }, [clickCount]);
+  }, [clickCount, baselineRange]);
 
   const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
   const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;

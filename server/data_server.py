@@ -78,8 +78,8 @@ def area():
         leftside = range['leftside']
         rightside = range['rightside']
 
-        xDataRange = xData[leftside:rightside]
-        yDataRange = newYdata[leftside:rightside]
+        xDataRange = xData[leftside:rightside-1]
+        yDataRange = newYdata[leftside:rightside-1]
         # calulate the area given the updated yData
         area = trapezoid(
             y=yDataRange,
@@ -107,9 +107,9 @@ def baselineCorrection():
         x_np = np.array(x_data)
         y_np = np.array(y_data)
         # perform baseline correction here
-        noise_mask = np.zeros_like(x_np, dtype=bool)
+        x = x_np
+        noise_mask = np.zeros_like(x, dtype=bool)
         for noise_region in baseline_time_ranges:
-            x = x_np
             noise_start, noise_end = noise_region["noise_start"], noise_region["noise_end"]
             noise_mask |= (x >= noise_start) & (x <= noise_end)
             noise_x = x[noise_mask]
@@ -118,15 +118,14 @@ def baselineCorrection():
             baseline = spline(x)
         # update the raw data with the baseline
         y_np = y_np - baseline
+        #print("baseline:", baseline)
         # extract the time region
         min_time, max_time = region_time["min_time"], region_time["max_time"]
         time_indices = [i for i, time in enumerate(
             x_np) if min_time <= time <= max_time]
-        print("this is the time indecies:", time_indices)
         # perform slicing to calculate area
         y_np = y_np[time_indices]
         selected_times = x_np[time_indices]
-        print("this is selected times:", selected_times)
         # calculate area by trapezoidal rule
         area = np.trapz(y_np, selected_times)
         response = {"area": area}
