@@ -206,7 +206,7 @@ export default function LinePlot({
           const dataToSend = {
             xData: xData,
             yData: yData,
-            baselineTimeRange: baselineRange.xValues,
+            baselineTimeRange: [{noise_start: Math.min(...baselineRange.xValues), noise_end: Math.max(...baselineRange.xValues)}],
             regionTime: {min_time: xData[range[index].leftside], max_time: xData[range[index].rightside]},
           };
           try {
