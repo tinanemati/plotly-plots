@@ -7,7 +7,6 @@ export default function Heatmap({
   updatexData,
   updateyData,
   updateRegionData,
-  updatenewYData,
   updateBaseline,
   horizontalLinePosition,
   updatehorizontalLinePosition,
@@ -160,7 +159,6 @@ export default function Heatmap({
     setHoverActive(true);
     updateRegionData([]);
     updateBaseline([]);
-    updatenewYData([]);
   };
 
   const handleWheel = (event) => {
