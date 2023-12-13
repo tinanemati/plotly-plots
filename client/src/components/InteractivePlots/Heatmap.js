@@ -125,13 +125,18 @@ export default function Heatmap({
       updateyData(arrayZ[clickedPointIndex]);
       // POST request to backend with yData to calculate simple basline
       try {
-        const dataToSend = { yData: arrayZ[clickedPointIndex] };
+        const dataToSend = {
+          yData: arrayZ[clickedPointIndex],
+          xData: arrayX,
+          p0: arrayX[0],
+          p1: arrayX[arrayX.length - 1],
+        };
         const response = await fetch("/baseline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(dataToSend), 
+          body: JSON.stringify(dataToSend),
         });
 
         if (!response.ok) {
@@ -139,10 +144,9 @@ export default function Heatmap({
           const errorData = await response.json();
           console.log(errorData);
         }
-
+        
         const responseData = await response.json();
-        updateBaseline(responseData.baseline)
-        updatenewYData(responseData.newYdata)
+        updateBaseline(responseData.baseline);
       } catch (error) {
         console.error("Error:", error);
         // Handle fetch errors

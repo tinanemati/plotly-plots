@@ -39,7 +39,11 @@ def well():
     }
 
     return jsonify(wellData)
-
+'''
+        baseline = [min(yData)] * len(yData)
+        # update the raw data according to baseline
+        newYdata = [y - b for y, b in zip(yData, baseline)]
+'''
 # Route that gives the baseline for the extracted (m/z)
 
 
@@ -48,13 +52,21 @@ def baseline():
     try:
         # Retrieve data from the POST request
         data = request.get_json()
-        # print(data)
-        yData = data.get("yData")
-        # create the most generic baseline
-        baseline = [min(yData)] * len(yData)
-        # update the raw data according to baseline
-        newYdata = [y - b for y, b in zip(yData, baseline)]
-        response = {"baseline": baseline, "newYdata": newYdata}
+        y_data = data.get("yData")
+        x_data = data.get("xData")
+        first_point = data.get("p0")
+        last_point = data.get("p1")
+        # update the arrays to numpy so operation can be easier
+        x_np = np.array(x_data)
+        y_np = np.array(y_data)
+        # perform deafault baseline correction here
+        noise_mask = np.zeros_like(x_np, dtype=bool)
+        noise_mask |= (x_np >= first_point) & (x_np <= last_point)
+        noise_x = x_np[noise_mask]
+        noise = y_np[noise_mask]
+        spline = UnivariateSpline(noise_x, noise, k=1, s=1)
+        baseline = spline(x_np)
+        response = {"baseline": baseline.tolist() }
         return jsonify(response), 200
 
     except Exception as e:
