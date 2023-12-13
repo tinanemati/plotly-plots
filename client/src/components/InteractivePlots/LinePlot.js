@@ -293,7 +293,7 @@ export default function LinePlot({
                 type: "scatter",
                 mode: "lines",
                 line: {
-                  color: "#1975d2",
+                  color: "rgb(238,44,130)",
                 },
                 name: area[index] ? `Region ${index + 1}` : undefined,
               }))
