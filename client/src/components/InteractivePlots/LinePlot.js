@@ -9,6 +9,7 @@ export default function LinePlot({
   baseline,
   horizontalLinePosition,
   updateRegionData,
+  updateBaseline,
   regionData,
 }) {
   const [hoverActive, setHoverActive] = useState(false);
@@ -82,8 +83,7 @@ export default function LinePlot({
         const channel = "MS 1";
         const power = Math.pow(10, 3);
         const { leftside, rightside } = item;
-        const calculatedArea =
-          area[index].calculatedArea.toFixed(6);
+        const calculatedArea = area[index].calculatedArea.toFixed(6);
         const start_time = Math.trunc(xData[leftside] * power) / power;
         const end_time = Math.trunc(xData[rightside - 1] * power) / power;
         const timeRange = `[${start_time} : ${end_time})`;
@@ -171,69 +171,78 @@ export default function LinePlot({
     // make a request to the backend if click count is equal to two
     const makeRequest = async () => {
       if (clickCount === 2 && baselineRange.xValues.length === 0) {
-          const dataToSend = {
-            range: range[index],
-            xData: xData,
-            yData: yData,
-            baseline: baseline,
-          };
-          try {
-            const response = await fetch("/area", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(dataToSend),
-            });
+        const dataToSend = {
+          range: range[index],
+          xData: xData,
+          yData: yData,
+          baseline: baseline,
+        };
+        try {
+          const response = await fetch("/area", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataToSend),
+          });
 
-            if (!response.ok) {
-              // Get the error message from server side and display to user
-              const errorData = await response.json();
-              console.log(errorData);
-            }
-
-            const responseData = await response.json();
-            // console.log(
-            //   "this is my area calculated by the server:",
-            //   responseData.area
-            // );
-            updateArea(index, responseData.area);
-            // Handle further processing based on the backend response
-          } catch (error) {
-            console.error("Error:", error);
+          if (!response.ok) {
+            // Get the error message from server side and display to user
+            const errorData = await response.json();
+            console.log(errorData);
           }
-        } else if (clickCount === 2 && baselineRange.xValues.length > 0) {
-          const dataToSend = {
-            xData: xData,
-            yData: yData,
-            baselineTimeRange: [{noise_start: Math.min(...baselineRange.xValues), noise_end: Math.max(...baselineRange.xValues)}],
-            regionTime: {min_time: xData[range[index].leftside], max_time: xData[range[index].rightside]},
-          };
-          try {
-            const response = await fetch("/baselineCorrection", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(dataToSend),
-            });
-  
-            if (!response.ok) {
-              // Get the error message from server side and display to user
-              const errorData = await response.json();
-              console.log(errorData);
-            }
-  
-            const responseData = await response.json();
-            console.log(
-              "this is my area calculated by the server:",
-              responseData.area
-            );
-            updateArea(index, responseData.area);
-            // Handle further processing based on the backend response
-          } catch (error) {
-            console.error("Error:", error);
-          } 
+
+          const responseData = await response.json();
+          // console.log(
+          //   "this is my area calculated by the server:",
+          //   responseData.area
+          // );
+          updateArea(index, responseData.area);
+          // Handle further processing based on the backend response
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      } else if (clickCount === 2 && baselineRange.xValues.length > 0) {
+        const dataToSend = {
+          xData: xData,
+          yData: yData,
+          baselineTimeRange: [
+            {
+              noise_start: Math.min(...baselineRange.xValues),
+              noise_end: Math.max(...baselineRange.xValues),
+            },
+          ],
+          regionTime: {
+            min_time: xData[range[index].leftside],
+            max_time: xData[range[index].rightside],
+          },
+        };
+        try {
+          const response = await fetch("/baselineCorrection", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataToSend),
+          });
+
+          if (!response.ok) {
+            // Get the error message from server side and display to user
+            const errorData = await response.json();
+            console.log(errorData);
+          }
+
+          const responseData = await response.json();
+          console.log(
+            "this is my area calculated by the server:",
+            responseData.area
+          );
+          updateArea(index, responseData.area);
+          updateBaseline(responseData.baseline);
+          // Handle further processing based on the backend response
+        } catch (error) {
+          console.error("Error:", error);
+        }
       }
     };
     makeRequest();
@@ -311,42 +320,42 @@ export default function LinePlot({
             zeroline: false,
           },
           dragmode: dragMode,
-          shapes:
-            baselineRange.xValues.length === 0
-              ? [
-                  {
-                    type: "line",
-                    xref: "x",
-                    x0: xData[0],
-                    x1: xData[xData.length - 1],
-                    yref: "y",
-                    y0: baseline[0],
-                    y1: baseline[baseline.length - 1],
-                    line: {
-                      dash: "dot",
-                      color: "#5450e4",
-                      width: 2,
-                    },
+          shapes: 
+          baselineRange.xValues.length === 0
+            ? [
+                {
+                  type: "line",
+                  xref: "x",
+                  x0: xData[0],
+                  x1: xData[xData.length - 1],
+                  yref: "y",
+                  y0: baseline[0],
+                  y1: baseline[baseline.length - 1],
+                  line: {
+                    dash: "dot",
+                    color: "#5450e4",
+                    width: 2,
                   },
-                ]
-              : baselineRange.xValues.length > 0
-              ? [
-                  {
-                    type: "line",
-                    xref: "x",
-                    x0: Math.min(...baselineRange.xValues),
-                    x1: Math.max(...baselineRange.xValues),
-                    yref: "y",
-                    y0: Math.min(...baselineRange.yValues),
-                    y1: Math.max(...baselineRange.yValues),
-                    line: {
-                      dash: "dot",
-                      color: "#5450e4",
-                      width: 2,
-                    },
+                },
+              ]
+            : baselineRange.xValues.length > 0
+            ? [
+                {
+                  type: "line",
+                  xref: "x",
+                  x0: Math.min(...baselineRange.xValues),
+                  x1: Math.max(...baselineRange.xValues),
+                  yref: "y",
+                  y0: Math.min(...baselineRange.yValues),
+                  y1: Math.max(...baselineRange.yValues),
+                  line: {
+                    dash: "dot",
+                    color: "#5450e4",
+                    width: 2,
                   },
-                ]
-              : [],
+                },
+              ]
+            : [],
         }}
         config={{
           scrollZoom: scrollZoom,
