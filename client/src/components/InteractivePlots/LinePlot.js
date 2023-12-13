@@ -29,7 +29,6 @@ export default function LinePlot({
     updatedareas[index] = { calculatedArea: newArea };
     setArea(updatedareas);
   };
-  console.log("area:", area)
   const [baselineRange, setBaselineRange] = useState({
     xValues: [],
     yValues: [],
@@ -52,6 +51,7 @@ export default function LinePlot({
   console.log("this is the points we have clicked:", pointClicked);
   //console.log("how many times i have been clicked:", clickCount);
   //console.log("is hover active:", hoverActive);
+  //console.log("area:", area)
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -83,7 +83,7 @@ export default function LinePlot({
         const power = Math.pow(10, 3);
         const { leftside, rightside } = item;
         const calculatedArea =
-          Math.trunc(area[index].calculatedArea * power) / power;
+          area[index].calculatedArea.toFixed(6);
         const start_time = Math.trunc(xData[leftside] * power) / power;
         const end_time = Math.trunc(xData[rightside - 1] * power) / power;
         const timeRange = `[${start_time} : ${end_time})`;
@@ -171,7 +171,6 @@ export default function LinePlot({
     // make a request to the backend if click count is equal to two
     const makeRequest = async () => {
       if (clickCount === 2 && baselineRange.xValues.length === 0) {
-          console.log("I am in correct condition")
           const dataToSend = {
             range: range[index],
             xData: xData,
@@ -194,10 +193,10 @@ export default function LinePlot({
             }
 
             const responseData = await response.json();
-            console.log(
-              "this is my area calculated by the server:",
-              responseData.area
-            );
+            // console.log(
+            //   "this is my area calculated by the server:",
+            //   responseData.area
+            // );
             updateArea(index, responseData.area);
             // Handle further processing based on the backend response
           } catch (error) {
