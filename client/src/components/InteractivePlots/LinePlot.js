@@ -11,6 +11,7 @@ export default function LinePlot({
   updateRegionData,
   updateBaseline,
   regionData,
+  sliceSelected,
 }) {
   const [hoverActive, setHoverActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
@@ -97,19 +98,19 @@ export default function LinePlot({
   }, [area]);
 
   // Reset the setting when we selecet a new slice and table data gets updated
-  // useEffect(() => {
-  //   if (regionData.length === 0) {
-  //     setHoverActive(false);
-  //     setLeftside(0);
-  //     setClickCount(0);
-  //     setArea([]);
-  //     setRange([]);
-  //     setIndex(0);
-  //     setConfigValue("Scroll Zoom & Pan");
-  //     setBaselineTimeRange([]);
-  //     setPointClicked([]);
-  //   }
-  // }, [regionData]);
+  useEffect(() => {
+    if (sliceSelected === false) {
+      setHoverActive(false);
+      setLeftside(0);
+      setClickCount(0);
+      setArea([]);
+      setRange([]);
+      setIndex(0);
+      setConfigValue("Scroll Zoom & Pan");
+      setBaselineTimeRange([]);
+      setPointClicked([]);
+    }
+  }, [sliceSelected]);
 
   const handleHover = (data) => {
     if (hoverActive && clickCount === 1) {

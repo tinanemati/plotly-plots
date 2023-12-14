@@ -8,6 +8,7 @@ export default function App() {
   const [baseline, setBaseline] = useState([]);
   const [regionData, setRegionData] = useState([]);
   const [horizontalLinePosition, setHorizontalLinePosition] = useState();
+  const [sliceSelected, setSliceSelected] = useState(false);
 
   const updatexData = (newData) => {
     setXdata(newData);
@@ -27,7 +28,7 @@ export default function App() {
   const updateRegionData = (newData) => {
     setRegionData(newData);
   };
-
+  console.log("picked a slice: ", sliceSelected)
   /* Testing
   console.log("this is my xData for line plotL: ", xData)
   console.log("this is my yData for line plot", yData)
@@ -47,12 +48,14 @@ export default function App() {
         updateRegionData={updateRegionData}
         horizontalLinePosition={horizontalLinePosition}
         updatehorizontalLinePosition={updatehorizontalLinePosition}
+        setSliceSelected={setSliceSelected}
       />
       <LinePlot
         xData={xData}
         yData={yData}
         baseline={baseline}
         regionData={regionData}
+        sliceSelected={sliceSelected}
         horizontalLinePosition={horizontalLinePosition}
         updateRegionData={updateRegionData}
         updateBaseline={updateBaseline}

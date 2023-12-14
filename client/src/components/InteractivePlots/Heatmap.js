@@ -10,6 +10,7 @@ export default function Heatmap({
   updateBaseline,
   horizontalLinePosition,
   updatehorizontalLinePosition,
+  setSliceSelected,
 }) {
   const [arrayX, setArrayX] = useState([]);
   const [arrayY, setArrayY] = useState([]);
@@ -115,6 +116,7 @@ export default function Heatmap({
       ],
     };
     performBaselineCorrection(dataToSend)
+    console.log("I should be here first")
   }, []);
   // function for baseline correction
   const performBaselineCorrection = async (requestData) => {
@@ -151,7 +153,7 @@ export default function Heatmap({
     }
   };
 
-  const handleClick = async (data) => {
+  const handleClick = (data) => {
     if (hoverActive) {
       const clickedPointIndex = data.points[0].pointIndex[0];
       const yValue = arrayY[clickedPointIndex];
@@ -171,11 +173,14 @@ export default function Heatmap({
       performBaselineCorrection(dataToSend)
       // Disable hover after click
       setHoverActive(false); 
+      // Update that we have selected a slice 
+      setSliceSelected(true)
     }
   };
 
   const handleDoubleClick = () => {
     setHoverActive(true);
+    setSliceSelected(false);
     updateRegionData([]);
     updateBaseline([]);
   };
