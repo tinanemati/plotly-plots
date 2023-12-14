@@ -48,10 +48,12 @@ def baselineCorrection():
     try:
         # Retreive data from the POST request
         data = request.get_json()
+        print("this is data:", data)
         # update the arrays to numpy so operation can be easier
         x_data = np.array(data.get("xData"))
         y_data = np.array(data.get("yData"))
         baseline_time_ranges = data.get("baselineTimeRange")
+        print("this is baseline:", baseline_time_ranges)
         # perform deafault baseline correction here
         noise_mask = np.zeros_like(x_data, dtype=bool)
         for noise_region in baseline_time_ranges:
@@ -67,6 +69,8 @@ def baselineCorrection():
             min_time, max_time = region_time["min_time"], region_time["max_time"]
         else:
             min_time, max_time = baseline_time_ranges[0]["noise_start"], baseline_time_ranges[0]["noise_end"]
+            print("this is baseline start:", min_time)
+            print("this is baseline end:", max_time)
         time_indices = [i for i, time in enumerate(
             x_data) if min_time <= time <= max_time]
         selected_times = x_data[time_indices]
@@ -86,18 +90,20 @@ def area():
     try:
         # Retrieve data from the POST request
         data = request.get_json()
-        yData = data.get("yData")
-        xData = data.get("xData")
-        range = data.get("range")
+        # update the arrays to numpy so operation can be easier
+        x_data = data.get("xData")
+        y_data = data.get("yData")
         baseline = data.get("baseline")
+        range = data.get("range")
+        
         # update the raw data according to baseline
-        newYdata = [y - b for y, b in zip(yData, baseline)]
+        new_y_data = [y - b for y, b in zip(y_data, baseline)]
         # slice the x and y data axis given the left and right side keys
         leftside = range['leftside']
         rightside = range['rightside']
 
-        xDataRange = xData[leftside:rightside]
-        yDataRange = newYdata[leftside:rightside]
+        xDataRange = x_data[leftside:rightside]
+        yDataRange = new_y_data[leftside:rightside]
         # calulate the area given the updated yData
         area = trapezoid(
             y=yDataRange,

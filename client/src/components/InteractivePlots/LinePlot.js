@@ -46,6 +46,8 @@ export default function LinePlot({
   //console.log("how many times i have been clicked:", clickCount);
   //console.log("is hover active:", hoverActive);
   //console.log("area:", area);
+  console.log("baseline:", baseline);
+  console.log("xData:", xData);
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -167,7 +169,6 @@ export default function LinePlot({
   };
   // Function for baseline correction
   const performBaselineCorrection = async (requestData) => {
-    console.log("I was called");
     try {
       const response = await fetch("/baselineCorrection", {
         method: "POST",
@@ -192,9 +193,37 @@ export default function LinePlot({
       console.error("Error:", error);
     }
   };
+  // Function for area calculation
+  const areaCalculation = async (requestData) => {
+    try {
+      const response = await fetch("/area", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        // Get the error message from server side and display to user
+        const errorData = await response.json();
+        console.log(errorData);
+      }
+
+      const responseData = await response.json();
+      console.log(
+        "this is my area calculated by the server:",
+        responseData.area
+      );
+      updateArea(index, responseData.area);
+      // Handle further processing based on the backend response
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
   useEffect(() => {
     // make a request to the backend if click count is equal to two
-    const makeRequest = async () => {
+    const makeRequest = () => {
       // if user has selected some baseline point, perform basline fitting operation
       if (baselineTimeRange.length >= 2) {
         const dataToSend = {
@@ -207,6 +236,7 @@ export default function LinePlot({
             },
           ],
         };
+        console.log("data to send:", dataToSend)
         performBaselineCorrection(dataToSend);
       } else if (baselineTimeRange.length === 0) {
         const dataToSend = {
@@ -219,88 +249,67 @@ export default function LinePlot({
             },
           ],
         };
+        console.log("data to send:", dataToSend)
         performBaselineCorrection(dataToSend);
       }
       // if we have selected a region and have updated default baseline, calculate area
-      if (clickCount === 2 && baselineTimeRange.length === 0) {
+      if (clickCount === 2 && baselineTimeRange.length >= 2) {
         const dataToSend = {
           range: range[index],
           xData: xData,
           yData: yData,
           baseline: baseline,
         };
-        try {
-          const response = await fetch("/area", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(dataToSend),
-          });
+        console.log("data to send:", dataToSend)
+        areaCalculation(dataToSend)
+      } 
+      // if we have selected a region and have a baseline correction for it calculate area
+      // else if (clickCount === 2 && baselineTimeRange.length > 0) {
+      //   const dataToSend = {
+      //     xData: xData,
+      //     yData: yData,
+      //     baselineTimeRange: [
+      //       {
+      //         noise_start: Math.min(...baselineTimeRange),
+      //         noise_end: Math.max(...baselineTimeRange),
+      //       },
+      //     ],
+      //     regionTime: {
+      //       min_time: xData[range[index].leftside],
+      //       max_time: xData[range[index].rightside],
+      //     },
+      //   };
+      //   try {
+      //     const response = await fetch("/areaCalculation", {
+      //       method: "POST",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify(dataToSend),
+      //     });
 
-          if (!response.ok) {
-            // Get the error message from server side and display to user
-            const errorData = await response.json();
-            console.log(errorData);
-          }
+      //     if (!response.ok) {
+      //       // Get the error message from server side and display to user
+      //       const errorData = await response.json();
+      //       console.log(errorData);
+      //     }
 
-          const responseData = await response.json();
-          // console.log(
-          //   "this is my area calculated by the server:",
-          //   responseData.area
-          // );
-          updateArea(index, responseData.area);
-          // Handle further processing based on the backend response
-        } catch (error) {
-          console.error("Error:", error);
-        }
-        // if we have selected a region and have a baseline correction for it calculate area
-      } else if (clickCount === 2 && baselineTimeRange.length > 0) {
-        const dataToSend = {
-          xData: xData,
-          yData: yData,
-          baselineTimeRange: [
-            {
-              noise_start: Math.min(...baselineTimeRange),
-              noise_end: Math.max(...baselineTimeRange),
-            },
-          ],
-          regionTime: {
-            min_time: xData[range[index].leftside],
-            max_time: xData[range[index].rightside],
-          },
-        };
-        try {
-          const response = await fetch("/areaCalculation", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(dataToSend),
-          });
-
-          if (!response.ok) {
-            // Get the error message from server side and display to user
-            const errorData = await response.json();
-            console.log(errorData);
-          }
-
-          const responseData = await response.json();
-          // console.log(
-          //   "this is my area calculated by the server:",
-          //   responseData.area
-          // );
-          updateArea(index, responseData.area);
-          updateBaseline(responseData.baseline);
-          setXdataUpdated(responseData.times);
-          // Handle further processing based on the backend response
-        } catch (error) {
-          console.error("Error:", error);
-        }
-      }
+      //     const responseData = await response.json();
+      //     // console.log(
+      //     //   "this is my area calculated by the server:",
+      //     //   responseData.area
+      //     // );
+      //     updateArea(index, responseData.area);
+      //     updateBaseline(responseData.baseline);
+      //     setXdataUpdated(responseData.times);
+      //     // Handle further processing based on the backend response
+      //   } catch (error) {
+      //     console.error("Error:", error);
+      //   }
+      // }
     };
     makeRequest();
-  }, [clickCount, baselineTimeRange]);
+  }, [clickCount,  baselineTimeRange.length]);
 
   const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
   const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
