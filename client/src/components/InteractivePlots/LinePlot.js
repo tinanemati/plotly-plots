@@ -324,7 +324,7 @@ export default function LinePlot({
           },
           dragmode: dragMode,
           shapes: 
-          baselineTimeRange.xValues.length === 0
+          baselineTimeRange.length === 0
             ? [
                 {
                   type: "line",
@@ -341,7 +341,7 @@ export default function LinePlot({
                   },
                 },
               ]
-            : baselineTimeRange.xValues.length > 0
+            : baselineTimeRange.length > 0
             ? [
                 {
                   type: "line",
