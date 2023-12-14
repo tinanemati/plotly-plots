@@ -46,8 +46,6 @@ export default function LinePlot({
   //console.log("how many times i have been clicked:", clickCount);
   //console.log("is hover active:", hoverActive);
   //console.log("area:", area);
-  console.log("baseline:", baseline);
-  console.log("xData:", xData);
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -224,9 +222,10 @@ export default function LinePlot({
   useEffect(() => {
     // make a request to the backend if click count is equal to two
     const makeRequest = () => {
+      let dataToSend
       // if user has selected some baseline point, perform basline fitting operation
-      if (baselineTimeRange.length >= 2) {
-        const dataToSend = {
+      if (baselineUpdated && baselineTimeRange.length >= 2) {
+        dataToSend = {
           xData: xData,
           yData: yData,
           baselineTimeRange: [
@@ -236,10 +235,9 @@ export default function LinePlot({
             },
           ],
         };
-        console.log("data to send:", dataToSend)
         performBaselineCorrection(dataToSend);
       } else if (baselineTimeRange.length === 0) {
-        const dataToSend = {
+        dataToSend = {
           xData: xData,
           yData: yData,
           baselineTimeRange: [
@@ -249,18 +247,16 @@ export default function LinePlot({
             },
           ],
         };
-        console.log("data to send:", dataToSend)
         performBaselineCorrection(dataToSend);
       }
       // if we have selected a region and have updated default baseline, calculate area
-      if (clickCount === 2 && baselineTimeRange.length >= 2) {
+      else if (clickCount === 2 && baselineTimeRange.length >= 2) {
         const dataToSend = {
           range: range[index],
           xData: xData,
           yData: yData,
           baseline: baseline,
         };
-        console.log("data to send:", dataToSend)
         areaCalculation(dataToSend)
       } 
       // if we have selected a region and have a baseline correction for it calculate area
@@ -384,7 +380,7 @@ export default function LinePlot({
           },
           dragmode: dragMode,
           shapes:
-            baselineTimeRange.length === 0
+            baselineTimeRange.length === 0 && baseline !== undefined
               ? [
                   {
                     type: "line",

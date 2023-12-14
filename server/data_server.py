@@ -48,12 +48,10 @@ def baselineCorrection():
     try:
         # Retreive data from the POST request
         data = request.get_json()
-        print("this is data:", data)
         # update the arrays to numpy so operation can be easier
         x_data = np.array(data.get("xData"))
         y_data = np.array(data.get("yData"))
         baseline_time_ranges = data.get("baselineTimeRange")
-        print("this is baseline:", baseline_time_ranges)
         # perform deafault baseline correction here
         noise_mask = np.zeros_like(x_data, dtype=bool)
         for noise_region in baseline_time_ranges:
@@ -69,8 +67,6 @@ def baselineCorrection():
             min_time, max_time = region_time["min_time"], region_time["max_time"]
         else:
             min_time, max_time = baseline_time_ranges[0]["noise_start"], baseline_time_ranges[0]["noise_end"]
-            print("this is baseline start:", min_time)
-            print("this is baseline end:", max_time)
         time_indices = [i for i, time in enumerate(
             x_data) if min_time <= time <= max_time]
         selected_times = x_data[time_indices]
