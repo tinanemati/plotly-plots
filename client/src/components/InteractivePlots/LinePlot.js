@@ -40,12 +40,12 @@ export default function LinePlot({
     selectedTimes.push(pointX);
     setBaselineTimeRange(selectedTimes);
   };
-  console.log("this is my range:", range);
+  //console.log("this is my range:", range);
   console.log("this is the baseline range we have:", baselineTimeRange);
   console.log("this is the points we have clicked:", pointClicked);
-  console.log("how many times i have been clicked:", clickCount);
+  //console.log("how many times i have been clicked:", clickCount);
   //console.log("is hover active:", hoverActive);
-  console.log("area:", area);
+  //console.log("area:", area);
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -152,7 +152,7 @@ export default function LinePlot({
       : [...pointClicked, clickedPointIndex];
     setPointClicked(updatedClickedPoints);
     const xValue = xData[clickedPointIndex];
-    console.log("onClick", data.points[0]);
+    //console.log("onClick", data.points[0]);
     updateBaselineTimeRange(xValue);
   };
   const handleDoubleClick = () => {
@@ -163,13 +163,13 @@ export default function LinePlot({
     //console.log("you double cliked on baseline feature")
     setBaselineTimeRange([]);
     setPointClicked([]);
+    setBaselineUpdated(false)
   };
   useEffect(() => {
     // make a request to the backend if click count is equal to two
     const makeRequest = async () => {
       // if user has selected some baseline point, perform basline fitting operation
-      if (baselineTimeRange.length > 0) {
-        console.log("i should be here");
+      if (baselineTimeRange.length >= 2) {
         try {
           const dataToSend = {
             xData: xData,
@@ -195,9 +195,9 @@ export default function LinePlot({
             console.log(errorData);
           }
           const responseData = await response.json();
-          console.log("i got a response:", responseData);
           updateBaseline(responseData.baseline);
           setBaselineUpdated(true);
+          setXdataUpdated(responseData.times)
         } catch (error) {
           console.error("Error:", error);
         }
@@ -267,10 +267,10 @@ export default function LinePlot({
           }
 
           const responseData = await response.json();
-          console.log(
-            "this is my area calculated by the server:",
-            responseData.area
-          );
+          // console.log(
+          //   "this is my area calculated by the server:",
+          //   responseData.area
+          // );
           updateArea(index, responseData.area);
           updateBaseline(responseData.baseline);
           setXdataUpdated(responseData.times);
@@ -373,30 +373,30 @@ export default function LinePlot({
                     },
                   },
                 ]
-              : baselineUpdated === true && xDataUpdated.length > 0
+              // : baselineUpdated === true && xDataUpdated.length > 0
+              // ? [
+              //     {
+              //       type: "line",
+              //       xref: "x",
+              //       x0: xDataUpdated[0],
+              //       x1: xDataUpdated[xDataUpdated.length - 1],
+              //       yref: "y",
+              //       y0: baseline[0],
+              //       y1: baseline[baseline.length - 1],
+              //       line: {
+              //         dash: "dot",
+              //         color: "#5450e4",
+              //         width: 2,
+              //       },
+              //     },
+              //   ]
+              : baselineUpdated === true && baselineTimeRange.length >= 2 && xDataUpdated.length > 0
               ? [
                   {
                     type: "line",
                     xref: "x",
                     x0: xDataUpdated[0],
                     x1: xDataUpdated[xDataUpdated.length - 1],
-                    yref: "y",
-                    y0: baseline[0],
-                    y1: baseline[baseline.length - 1],
-                    line: {
-                      dash: "dot",
-                      color: "#5450e4",
-                      width: 2,
-                    },
-                  },
-                ]
-              : baselineUpdated === true && baselineTimeRange.length > 2
-              ? [
-                  {
-                    type: "line",
-                    xref: "x",
-                    x0: xData[0],
-                    x1: xData[xData.length - 1],
                     yref: "y",
                     y0: baseline[0],
                     y1: baseline[baseline.length - 1],
