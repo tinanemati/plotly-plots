@@ -40,7 +40,7 @@ def well():
 
     return jsonify(wellData)
 
-# Route that will perform baseline correction 
+# Route that will perform baseline correction
 
 
 @app.route('/baselineCorrection', methods=['POST'])
@@ -71,8 +71,9 @@ def baselineCorrection():
             x_data) if min_time <= time <= max_time]
         selected_times = x_data[time_indices]
         corrected_baseline = baseline[time_indices]
-        # Return baseline as a response from the POST request 
-        response = {"baseline": corrected_baseline.tolist(), "times": selected_times.tolist()}
+        # Return baseline as a response from the POST request
+        response = {"baseline": corrected_baseline.tolist(),
+                    "times": selected_times.tolist()}
         return jsonify(response), 200
 
     except Exception as e:
@@ -92,7 +93,7 @@ def area():
         y_data = data.get("yData")
         baseline = data.get("baseline")
         range = data.get("range")
-        
+
         # update the raw data according to baseline
         new_y_data = [y - b for y, b in zip(y_data, baseline)]
         # slice the x and y data axis given the left and right side keys
@@ -111,55 +112,6 @@ def area():
 
     except Exception as e:
         return jsonify({'error': str(e)})
-
-# Route that will calculate area against baseline 
-
-
-@app.route('/areaCalculation', methods=['POST'])
-def areaCalculation():
-    try:
-        # Retreive data from the POST request
-        data = request.get_json()
-        x_data = data.get("xData")
-        y_data = data.get("yData")
-        baseline_time_ranges = data.get("baselineTimeRange")
-        region_time = data.get("regionTime")
-        # update the arrays to numpy so operation can be easier
-        x_np = np.array(x_data)
-        y_np = np.array(y_data)
-        # perform baseline correction here
-        x = x_np
-        noise_mask = np.zeros_like(x, dtype=bool)
-        for noise_region in baseline_time_ranges:
-            noise_start, noise_end = noise_region["noise_start"], noise_region["noise_end"]
-            noise_mask |= (x >= noise_start) & (x <= noise_end)
-            noise_x = x[noise_mask]
-            noise = y_np[noise_mask]
-            spline = UnivariateSpline(noise_x, noise, k=1, s=1)
-            baseline = spline(x)
-        # update the raw data with the baseline
-        y_np = y_np - baseline
-        # print("baseline:", baseline)
-        # extract the time region
-        min_time, max_time = region_time["min_time"], region_time["max_time"]
-        time_indices = [i for i, time in enumerate(
-            x_np) if min_time <= time <= max_time]
-        # perform slicing to calculate area
-        y_np = y_np[time_indices]
-        selected_times = x_np[time_indices]
-        corrected_baseline = baseline[time_indices]
-        # calculate area by trapezoidal rule
-        area = np.trapz(y_np, selected_times)
-        response = {"area": area, "baseline": corrected_baseline.tolist(
-        ), "times": selected_times.tolist()}
-        return jsonify(response), 200
-    except Exception as e:
-        return jsonify({'error': str(e)})
-
-
-
-
-
 
 
 if __name__ == '__main__':
