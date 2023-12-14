@@ -103,7 +103,43 @@ export default function Heatmap({
     updatehorizontalLinePosition(yData[0]);
     updateyData(zData[0]);
     updatexData(xData);
+     // Perform baseline fitting 
+     const dataToSend = {
+      yData: arrayZ[zData[0]],
+      xData: arrayX,
+      baselineTimeRange: [
+        {
+          noise_start: arrayX[0],
+          noise_end: arrayX[arrayX.length - 1],
+        },
+      ],
+    };
+    performBaselineCorrection(dataToSend)
   }, []);
+  // function for baseline correction
+  const performBaselineCorrection = async (requestData) => {
+    // POST request to backend with yData to calculate simple basline
+    try {
+      const response = await fetch("/baselineCorrection", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        // Get the error message from server side and display to user
+        const errorData = await response.json();
+        console.log(errorData);
+      }
+
+      const responseData = await response.json();
+      updateBaseline(responseData.baseline);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const handleHover = (data) => {
     if (hoverActive) {
@@ -121,39 +157,20 @@ export default function Heatmap({
       const yValue = arrayY[clickedPointIndex];
       updatehorizontalLinePosition(yValue);
       updateyData(arrayZ[clickedPointIndex]);
-      // POST request to backend with yData to calculate simple basline
-      try {
-        const dataToSend = {
-          yData: arrayZ[clickedPointIndex],
-          xData: arrayX,
-          baselineTimeRange: [
-            {
-              noise_start: arrayX[0],
-              noise_end: arrayX[arrayX.length - 1],
-            },
-          ],
-        };
-        const response = await fetch("/baselineCorrection", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+      // Perform baseline fitting 
+      const dataToSend = {
+        yData: arrayZ[clickedPointIndex],
+        xData: arrayX,
+        baselineTimeRange: [
+          {
+            noise_start: arrayX[0],
+            noise_end: arrayX[arrayX.length - 1],
           },
-          body: JSON.stringify(dataToSend),
-        });
-
-        if (!response.ok) {
-          // Get the error message from server side and display to user
-          const errorData = await response.json();
-          console.log(errorData);
-        }
-        
-        const responseData = await response.json();
-        updateBaseline(responseData.baseline);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-
-      setHoverActive(false); // Disable hover after click
+        ],
+      };
+      performBaselineCorrection(dataToSend)
+      // Disable hover after click
+      setHoverActive(false); 
     }
   };
 
