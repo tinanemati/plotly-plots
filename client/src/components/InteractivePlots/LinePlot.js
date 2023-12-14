@@ -10,7 +10,9 @@ export default function LinePlot({
   horizontalLinePosition,
   updateRegionData,
   updateBaseline,
+  updatedxData,
   regionData,
+  xDataUpdated,
 }) {
   const [hoverActive, setHoverActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
@@ -239,6 +241,7 @@ export default function LinePlot({
           );
           updateArea(index, responseData.area);
           updateBaseline(responseData.baseline);
+          updatedxData(responseData.times)
           // Handle further processing based on the backend response
         } catch (error) {
           console.error("Error:", error);
@@ -343,11 +346,11 @@ export default function LinePlot({
                 {
                   type: "line",
                   xref: "x",
-                  x0: Math.min(...baselineRange.xValues),
-                  x1: Math.max(...baselineRange.xValues),
+                  x0: xDataUpdated[0],
+                  x1: xDataUpdated[xDataUpdated.length - 1],
                   yref: "y",
-                  y0: Math.min(...baselineRange.yValues),
-                  y1: Math.max(...baselineRange.yValues),
+                  y0: baseline[0],
+                  y1: baseline[baseline.length - 1],
                   line: {
                     dash: "dot",
                     color: "#5450e4",

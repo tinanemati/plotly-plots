@@ -39,6 +39,8 @@ def well():
     }
 
     return jsonify(wellData)
+
+
 '''
         baseline = [min(yData)] * len(yData)
         # update the raw data according to baseline
@@ -66,7 +68,7 @@ def baseline():
         noise = y_np[noise_mask]
         spline = UnivariateSpline(noise_x, noise, k=1, s=1)
         baseline = spline(x_np)
-        response = {"baseline": baseline.tolist() }
+        response = {"baseline": baseline.tolist()}
         return jsonify(response), 200
 
     except Exception as e:
@@ -130,7 +132,7 @@ def baselineCorrection():
             baseline = spline(x)
         # update the raw data with the baseline
         y_np = y_np - baseline
-        #print("baseline:", baseline)
+        # print("baseline:", baseline)
         # extract the time region
         min_time, max_time = region_time["min_time"], region_time["max_time"]
         time_indices = [i for i, time in enumerate(
@@ -138,9 +140,11 @@ def baselineCorrection():
         # perform slicing to calculate area
         y_np = y_np[time_indices]
         selected_times = x_np[time_indices]
+        corrected_baseline = baseline[time_indices]
         # calculate area by trapezoidal rule
         area = np.trapz(y_np, selected_times)
-        response = {"area": area, "baseline": baseline.tolist()}
+        response = {"area": area, "baseline": corrected_baseline.tolist(
+        ), "times": selected_times.tolist()}
         return jsonify(response), 200
     except Exception as e:
         return jsonify({'error': str(e)})
