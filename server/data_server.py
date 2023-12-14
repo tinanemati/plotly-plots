@@ -40,34 +40,29 @@ def well():
 
     return jsonify(wellData)
 
-
-'''
-        baseline = [min(yData)] * len(yData)
-        # update the raw data according to baseline
-        newYdata = [y - b for y, b in zip(yData, baseline)]
-'''
-# Route that gives the baseline for the extracted (m/z)
+# Route that will perform baseline correction 
 
 
-@app.route('/baseline', methods=['POST'])
-def baseline():
+@app.route('/baselineCorrection', methods=['POST'])
+def baselineCorrection():
     try:
-        # Retrieve data from the POST request
+        # Retreive data from the POST request
         data = request.get_json()
-        y_data = data.get("yData")
-        x_data = data.get("xData")
-        first_point = data.get("p0")
-        last_point = data.get("p1")
+        print("this is the data we git from server:", data)
         # update the arrays to numpy so operation can be easier
-        x_np = np.array(x_data)
-        y_np = np.array(y_data)
+        x_data = np.array(data.get("xData"))
+        y_data = np.array(data.get("yData"))
+        baseline_time_ranges = data.get("baselineTimeRange")
         # perform deafault baseline correction here
-        noise_mask = np.zeros_like(x_np, dtype=bool)
-        noise_mask |= (x_np >= first_point) & (x_np <= last_point)
-        noise_x = x_np[noise_mask]
-        noise = y_np[noise_mask]
-        spline = UnivariateSpline(noise_x, noise, k=1, s=1)
-        baseline = spline(x_np)
+        noise_mask = np.zeros_like(x_data, dtype=bool)
+        for noise_region in baseline_time_ranges:
+            noise_start, noise_end = noise_region["noise_start"], noise_region["noise_end"]
+            noise_mask |= (x_data >= noise_start) & (x_data <= noise_end)
+            noise_x = x_data[noise_mask]
+            noise = y_data[noise_mask]
+            spline = UnivariateSpline(noise_x, noise, k=1, s=1)
+            baseline = spline(x_data)
+        # Return baseline as a response from the POST request 
         response = {"baseline": baseline.tolist()}
         return jsonify(response), 200
 
@@ -105,11 +100,11 @@ def area():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-# Route that will apply baseline correction and re-calculate area
+# Route that will calculate area against baseline 
 
 
-@app.route('/baselineCorrection', methods=['POST'])
-def baselineCorrection():
+@app.route('/areaCalculation', methods=['POST'])
+def areaCalculation():
     try:
         # Retreive data from the POST request
         data = request.get_json()
@@ -148,6 +143,11 @@ def baselineCorrection():
         return jsonify(response), 200
     except Exception as e:
         return jsonify({'error': str(e)})
+
+
+
+
+
 
 
 if __name__ == '__main__':

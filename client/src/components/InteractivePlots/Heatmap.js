@@ -127,10 +127,14 @@ export default function Heatmap({
         const dataToSend = {
           yData: arrayZ[clickedPointIndex],
           xData: arrayX,
-          p0: arrayX[0],
-          p1: arrayX[arrayX.length - 1],
+          baselineTimeRange: [
+            {
+              noise_start: arrayX[0],
+              noise_end: arrayX[arrayX.length - 1],
+            },
+          ],
         };
-        const response = await fetch("/baseline", {
+        const response = await fetch("/baselineCorrection", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -148,7 +152,6 @@ export default function Heatmap({
         updateBaseline(responseData.baseline);
       } catch (error) {
         console.error("Error:", error);
-        // Handle fetch errors
       }
 
       setHoverActive(false); // Disable hover after click

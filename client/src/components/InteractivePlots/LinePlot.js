@@ -16,6 +16,7 @@ export default function LinePlot({
   const [clickCount, setClickCount] = useState(0);
   const [index, setIndex] = useState(0);
   const [xDataUpdated, setXdataUpdated] = useState([]);
+  const [baselineUpdated, setBaselineUpdated] = useState(false);
   const [range, setRange] = useState([]);
   // Function to update the range at a specific index
   const updateRange = (index, newLeft, newRight) => {
@@ -35,16 +36,16 @@ export default function LinePlot({
   const [pointClicked, setPointClicked] = useState([]);
   // Function that will update the baseline range
   const updateBaselineTimeRange = (pointX) => {
-    const selectedTimes = [...baselineTimeRange]
-    selectedTimes.push(pointX)
+    const selectedTimes = [...baselineTimeRange];
+    selectedTimes.push(pointX);
     setBaselineTimeRange(selectedTimes);
   };
-  console.log("this is my range:", range)
+  console.log("this is my range:", range);
   console.log("this is the baseline range we have:", baselineTimeRange);
   console.log("this is the points we have clicked:", pointClicked);
   console.log("how many times i have been clicked:", clickCount);
   //console.log("is hover active:", hoverActive);
-  console.log("area:", area)
+  console.log("area:", area);
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -65,6 +66,7 @@ export default function LinePlot({
       updateRegionData([]);
       setBaselineTimeRange([]);
       setPointClicked([]);
+      setBaselineUpdated(false);
     } else {
       setHoverActive(false);
     }
@@ -150,9 +152,8 @@ export default function LinePlot({
       : [...pointClicked, clickedPointIndex];
     setPointClicked(updatedClickedPoints);
     const xValue = xData[clickedPointIndex];
-    const yValue = yData[clickedPointIndex];
     console.log("onClick", data.points[0]);
-    updateBaselineTimeRange(xValue, yValue);
+    updateBaselineTimeRange(xValue);
   };
   const handleDoubleClick = () => {
     setHoverActive(true);
@@ -160,7 +161,7 @@ export default function LinePlot({
   };
   const handleDoubleClickBaseline = () => {
     //console.log("you double cliked on baseline feature")
-    setBaselineTimeRange({ xValues: [], yValues: [] });
+    setBaselineTimeRange([]);
     setPointClicked([]);
   };
   useEffect(() => {
@@ -168,7 +169,38 @@ export default function LinePlot({
     const makeRequest = async () => {
       // if user has selected some baseline point, perform basline fitting operation
       if (baselineTimeRange.length > 0) {
+        console.log("i should be here");
+        try {
+          const dataToSend = {
+            xData: xData,
+            yData: yData,
+            baselineTimeRange: [
+              {
+                noise_start: Math.min(...baselineTimeRange),
+                noise_end: Math.max(...baselineTimeRange),
+              },
+            ],
+          };
+          const response = await fetch("/baselineCorrection", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataToSend),
+          });
 
+          if (!response.ok) {
+            // Get the error message from server side and display to user
+            const errorData = await response.json();
+            console.log(errorData);
+          }
+          const responseData = await response.json();
+          console.log("i got a response:", responseData);
+          updateBaseline(responseData.baseline);
+          setBaselineUpdated(true);
+        } catch (error) {
+          console.error("Error:", error);
+        }
       }
       // if we have selected a region and have updated default baseline, calculate area
       if (clickCount === 2 && baselineTimeRange.length === 0) {
@@ -203,7 +235,7 @@ export default function LinePlot({
         } catch (error) {
           console.error("Error:", error);
         }
-      // if we have selected a region and have a baseline correction for it calculate area 
+        // if we have selected a region and have a baseline correction for it calculate area
       } else if (clickCount === 2 && baselineTimeRange.length > 0) {
         const dataToSend = {
           xData: xData,
@@ -220,7 +252,7 @@ export default function LinePlot({
           },
         };
         try {
-          const response = await fetch("/baselineCorrection", {
+          const response = await fetch("/areaCalculation", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -241,7 +273,7 @@ export default function LinePlot({
           );
           updateArea(index, responseData.area);
           updateBaseline(responseData.baseline);
-          setXdataUpdated(responseData.times)
+          setXdataUpdated(responseData.times);
           // Handle further processing based on the backend response
         } catch (error) {
           console.error("Error:", error);
@@ -249,7 +281,7 @@ export default function LinePlot({
       }
     };
     makeRequest();
-  }, [clickCount, baselineTimeRange]);
+  }, [clickCount, baselineTimeRange.length]);
 
   const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
   const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
@@ -323,42 +355,59 @@ export default function LinePlot({
             zeroline: false,
           },
           dragmode: dragMode,
-          shapes: 
-          baselineTimeRange.length === 0
-            ? [
-                {
-                  type: "line",
-                  xref: "x",
-                  x0: xData[0],
-                  x1: xData[xData.length - 1],
-                  yref: "y",
-                  y0: baseline[0],
-                  y1: baseline[baseline.length - 1],
-                  line: {
-                    dash: "dot",
-                    color: "#5450e4",
-                    width: 2,
+          shapes:
+            baselineUpdated === false && baselineTimeRange.length === 0
+              ? [
+                  {
+                    type: "line",
+                    xref: "x",
+                    x0: xData[0],
+                    x1: xData[xData.length - 1],
+                    yref: "y",
+                    y0: baseline[0],
+                    y1: baseline[baseline.length - 1],
+                    line: {
+                      dash: "dot",
+                      color: "#5450e4",
+                      width: 2,
+                    },
                   },
-                },
-              ]
-            : baselineTimeRange.length > 0
-            ? [
-                {
-                  type: "line",
-                  xref: "x",
-                  x0: xDataUpdated[0],
-                  x1: xDataUpdated[xDataUpdated.length - 1],
-                  yref: "y",
-                  y0: baseline[0],
-                  y1: baseline[baseline.length - 1],
-                  line: {
-                    dash: "dot",
-                    color: "#5450e4",
-                    width: 2,
+                ]
+              : baselineUpdated === true && xDataUpdated.length > 0
+              ? [
+                  {
+                    type: "line",
+                    xref: "x",
+                    x0: xDataUpdated[0],
+                    x1: xDataUpdated[xDataUpdated.length - 1],
+                    yref: "y",
+                    y0: baseline[0],
+                    y1: baseline[baseline.length - 1],
+                    line: {
+                      dash: "dot",
+                      color: "#5450e4",
+                      width: 2,
+                    },
                   },
-                },
-              ]
-            : [],
+                ]
+              : baselineUpdated === true && baselineTimeRange.length > 2
+              ? [
+                  {
+                    type: "line",
+                    xref: "x",
+                    x0: xData[0],
+                    x1: xData[xData.length - 1],
+                    yref: "y",
+                    y0: baseline[0],
+                    y1: baseline[baseline.length - 1],
+                    line: {
+                      dash: "dot",
+                      color: "#5450e4",
+                      width: 2,
+                    },
+                  },
+                ]
+              : [],
         }}
         config={{
           scrollZoom: scrollZoom,
