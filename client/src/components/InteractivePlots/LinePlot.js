@@ -40,12 +40,12 @@ export default function LinePlot({
     selectedTimes.push(pointX);
     setBaselineTimeRange(selectedTimes);
   };
-  //console.log("this is my range:", range);
+  console.log("this is my range:", range);
   // console.log("this is the baseline range we have:", baselineTimeRange);
   // console.log("this is the points we have clicked:", pointClicked);
-  console.log("how many times i have been clicked:", clickCount);
-  //console.log("is hover active:", hoverActive);
-  console.log("area:", area);
+  // console.log("how many times i have been clicked:", clickCount);
+  console.log("is hover active:", hoverActive);
+  // console.log("area:", area);
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -97,19 +97,19 @@ export default function LinePlot({
   }, [area]);
 
   // Reset the setting when we selecet a new slice and table data gets updated
-  useEffect(() => {
-    if (regionData.length === 0) {
-      setHoverActive(false);
-      setLeftside(0);
-      setClickCount(0);
-      setArea([]);
-      setRange([]);
-      setIndex(0);
-      setConfigValue("Scroll Zoom & Pan");
-      setBaselineTimeRange([]);
-      setPointClicked([]);
-    }
-  }, [regionData]);
+  // useEffect(() => {
+  //   if (regionData.length === 0) {
+  //     setHoverActive(false);
+  //     setLeftside(0);
+  //     setClickCount(0);
+  //     setArea([]);
+  //     setRange([]);
+  //     setIndex(0);
+  //     setConfigValue("Scroll Zoom & Pan");
+  //     setBaselineTimeRange([]);
+  //     setPointClicked([]);
+  //   }
+  // }, [regionData]);
 
   const handleHover = (data) => {
     if (hoverActive && clickCount === 1) {
@@ -256,23 +256,23 @@ export default function LinePlot({
   }, [baselineTimeRange.length, baselineUpdated]);
 
   // make request to the backend to calculate area
-  // const areaCalculation = () => {
-  //   let dataToSend;
-  //   if (clickCount === 2 && baseline !== undefined) {
-  //     dataToSend = {
-  //       range: range[index],
-  //       xData: xData,
-  //       yData: yData,
-  //       baseline: baseline,
-  //     };
-  //   }
-  //   performAreaCalculation(dataToSend);
-  // };
+  const areaCalculation = () => {
+    let dataToSend;
+    if (clickCount === 2 && baseline !== undefined) {
+      dataToSend = {
+        range: range[index],
+        xData: xData,
+        yData: yData,
+        baseline: baseline,
+      };
+    }
+    performAreaCalculation(dataToSend);
+  };
 
   // Hook that will update the area calculation accordingly
-  // useEffect(() => {
-  //   areaCalculation();
-  // }, [clickCount]);
+  useEffect(() => {
+    areaCalculation();
+  }, [clickCount]);
 
   const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
   const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
