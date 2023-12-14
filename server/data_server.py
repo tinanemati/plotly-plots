@@ -86,6 +86,7 @@ def area():
     try:
         # Retrieve data from the POST request
         data = request.get_json()
+        print("data:", data)
         # update the arrays to numpy so operation can be easier
         x_data = data.get("xData")
         y_data = data.get("yData")

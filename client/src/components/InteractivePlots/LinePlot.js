@@ -41,11 +41,11 @@ export default function LinePlot({
     setBaselineTimeRange(selectedTimes);
   };
   //console.log("this is my range:", range);
-  console.log("this is the baseline range we have:", baselineTimeRange);
-  console.log("this is the points we have clicked:", pointClicked);
-  //console.log("how many times i have been clicked:", clickCount);
+  // console.log("this is the baseline range we have:", baselineTimeRange);
+  // console.log("this is the points we have clicked:", pointClicked);
+  console.log("how many times i have been clicked:", clickCount);
   //console.log("is hover active:", hoverActive);
-  //console.log("area:", area);
+  console.log("area:", area);
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -192,7 +192,7 @@ export default function LinePlot({
     }
   };
   // Function for area calculation
-  const areaCalculation = async (requestData) => {
+  const performAreaCalculation = async (requestData) => {
     try {
       const response = await fetch("/area", {
         method: "POST",
@@ -219,8 +219,8 @@ export default function LinePlot({
       console.error("Error:", error);
     }
   };
-  // make a request to the backend if click count is equal to two
-  const makeRequest = () => {
+  // make a request to the backend to calculated baseline
+  const baselineCorrection = () => {
     let dataToSend;
     // if user has selected some baseline point, perform basline fitting operation
     if (baselineUpdated && baselineTimeRange.length >= 2) {
@@ -248,21 +248,31 @@ export default function LinePlot({
       };
       performBaselineCorrection(dataToSend);
     }
-    // if we have selected a region and have updated default baseline, calculate area
-    else if (clickCount === 2 && baselineTimeRange.length >= 2) {
-      const dataToSend = {
-        range: range[index],
-        xData: xData,
-        yData: yData,
-        baseline: baseline,
-      };
-      areaCalculation(dataToSend);
-    }
   };
-  // Hook that will update the calculation accordingly
+
+  // Hook that will update the baseline calculation accordingly
   useEffect(() => {
-    makeRequest();
-  }, [clickCount, baselineTimeRange.length]);
+    baselineCorrection();
+  }, [baselineTimeRange.length, baselineUpdated]);
+
+  // make request to the backend to calculate area
+  // const areaCalculation = () => {
+  //   let dataToSend;
+  //   if (clickCount === 2 && baseline !== undefined) {
+  //     dataToSend = {
+  //       range: range[index],
+  //       xData: xData,
+  //       yData: yData,
+  //       baseline: baseline,
+  //     };
+  //   }
+  //   performAreaCalculation(dataToSend);
+  // };
+
+  // Hook that will update the area calculation accordingly
+  // useEffect(() => {
+  //   areaCalculation();
+  // }, [clickCount]);
 
   const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
   const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
