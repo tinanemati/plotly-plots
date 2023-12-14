@@ -92,15 +92,16 @@ def area():
         y_data = data.get("yData")
         baseline = data.get("baseline")
         range = data.get("range")
-
-        # update the raw data according to baseline
-        new_y_data = [y - b for y, b in zip(y_data, baseline)]
-        # slice the x and y data axis given the left and right side keys
+        # retreive slicing indecies from range 
         leftside = range['leftside']
         rightside = range['rightside']
-
+        # update the raw data according to baseline
+        y_data = y_data[leftside:rightside]
+        yDataRange = [y - b for y, b in zip(y_data, baseline)]
+        
+        # slice the x and y data axis given the left and right side keys
         xDataRange = x_data[leftside:rightside]
-        yDataRange = new_y_data[leftside:rightside]
+        #yDataRange = new_y_data[leftside:rightside]
         # calulate the area given the updated yData
         area = trapezoid(
             y=yDataRange,

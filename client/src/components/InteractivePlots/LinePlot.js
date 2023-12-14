@@ -263,7 +263,7 @@ export default function LinePlot({
   // make request to the backend to calculate area
   const areaCalculation = () => {
     let dataToSend;
-    if (clickCount === 2 && baseline !== undefined) {
+    if (clickCount === 2 && baselineUpdated) {
       dataToSend = {
         range: range[index],
         xData: xData,
