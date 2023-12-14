@@ -44,9 +44,9 @@ export default function LinePlot({
   console.log("this is my range:", range);
   // console.log("this is the baseline range we have:", baselineTimeRange);
   // console.log("this is the points we have clicked:", pointClicked);
-  // console.log("how many times i have been clicked:", clickCount);
+  console.log("how many times i have been clicked:", clickCount);
   console.log("is hover active:", hoverActive);
-  // console.log("area:", area);
+  console.log("area:", area);
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -224,7 +224,7 @@ export default function LinePlot({
   const baselineCorrection = () => {
     let dataToSend;
     // if user has selected some baseline point, perform basline fitting operation
-    if (baselineUpdated && baselineTimeRange.length >= 2) {
+    if (baselineUpdated && baselineTimeRange.length >= 2 && sliceSelected) {
       dataToSend = {
         xData: xData,
         yData: yData,
@@ -236,7 +236,7 @@ export default function LinePlot({
         ],
       };
       performBaselineCorrection(dataToSend);
-    } else if (baselineTimeRange.length === 0) {
+    } else if (baselineTimeRange.length === 0 && sliceSelected) {
       dataToSend = {
         xData: xData,
         yData: yData,
@@ -254,7 +254,7 @@ export default function LinePlot({
   // Hook that will update the baseline calculation accordingly
   useEffect(() => {
     baselineCorrection();
-  }, [baselineTimeRange.length, baselineUpdated]);
+  }, [baselineTimeRange.length, baselineUpdated, sliceSelected]);
 
   // make request to the backend to calculate area
   const areaCalculation = () => {
