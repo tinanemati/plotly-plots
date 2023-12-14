@@ -48,12 +48,12 @@ def baselineCorrection():
     try:
         # Retreive data from the POST request
         data = request.get_json()
-        print("data:", data)
+        #print("data:", data)
         # update the arrays to numpy so operation can be easier
         x_data = np.array(data.get("xData"))
         y_data = np.array(data.get("yData"))
         baseline_time_ranges = data.get("baselineTimeRange")
-        print("baseline_time_ranges:", baseline_time_ranges)
+        #print("baseline_time_ranges:", baseline_time_ranges)
         # perform deafault baseline correction here
         noise_mask = np.zeros_like(x_data, dtype=bool)
         for noise_region in baseline_time_ranges:
@@ -79,7 +79,6 @@ def baselineCorrection():
         return jsonify(response), 200
 
     except Exception as e:
-        print("e:", e)
         return jsonify({'error': str(e)})
 
 # Route that gives the path and channel that we need to process
