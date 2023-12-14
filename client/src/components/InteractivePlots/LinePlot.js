@@ -218,94 +218,51 @@ export default function LinePlot({
     } catch (error) {
       console.error("Error:", error);
     }
-  }
+  };
+  // make a request to the backend if click count is equal to two
+  const makeRequest = () => {
+    let dataToSend;
+    // if user has selected some baseline point, perform basline fitting operation
+    if (baselineUpdated && baselineTimeRange.length >= 2) {
+      dataToSend = {
+        xData: xData,
+        yData: yData,
+        baselineTimeRange: [
+          {
+            noise_start: Math.min(...baselineTimeRange),
+            noise_end: Math.max(...baselineTimeRange),
+          },
+        ],
+      };
+      performBaselineCorrection(dataToSend);
+    } else if (baselineTimeRange.length === 0) {
+      dataToSend = {
+        xData: xData,
+        yData: yData,
+        baselineTimeRange: [
+          {
+            noise_start: xData[0],
+            noise_end: xData[xData.length - 1],
+          },
+        ],
+      };
+      performBaselineCorrection(dataToSend);
+    }
+    // if we have selected a region and have updated default baseline, calculate area
+    else if (clickCount === 2 && baselineTimeRange.length >= 2) {
+      const dataToSend = {
+        range: range[index],
+        xData: xData,
+        yData: yData,
+        baseline: baseline,
+      };
+      areaCalculation(dataToSend);
+    }
+  };
+  // Hook that will update the calculation accordingly
   useEffect(() => {
-    // make a request to the backend if click count is equal to two
-    const makeRequest = () => {
-      let dataToSend
-      // if user has selected some baseline point, perform basline fitting operation
-      if (baselineUpdated && baselineTimeRange.length >= 2) {
-        dataToSend = {
-          xData: xData,
-          yData: yData,
-          baselineTimeRange: [
-            {
-              noise_start: Math.min(...baselineTimeRange),
-              noise_end: Math.max(...baselineTimeRange),
-            },
-          ],
-        };
-        performBaselineCorrection(dataToSend);
-      } else if (baselineTimeRange.length === 0) {
-        dataToSend = {
-          xData: xData,
-          yData: yData,
-          baselineTimeRange: [
-            {
-              noise_start: xData[0],
-              noise_end: xData[xData.length - 1],
-            },
-          ],
-        };
-        performBaselineCorrection(dataToSend);
-      }
-      // if we have selected a region and have updated default baseline, calculate area
-      else if (clickCount === 2 && baselineTimeRange.length >= 2) {
-        const dataToSend = {
-          range: range[index],
-          xData: xData,
-          yData: yData,
-          baseline: baseline,
-        };
-        areaCalculation(dataToSend)
-      } 
-      // if we have selected a region and have a baseline correction for it calculate area
-      // else if (clickCount === 2 && baselineTimeRange.length > 0) {
-      //   const dataToSend = {
-      //     xData: xData,
-      //     yData: yData,
-      //     baselineTimeRange: [
-      //       {
-      //         noise_start: Math.min(...baselineTimeRange),
-      //         noise_end: Math.max(...baselineTimeRange),
-      //       },
-      //     ],
-      //     regionTime: {
-      //       min_time: xData[range[index].leftside],
-      //       max_time: xData[range[index].rightside],
-      //     },
-      //   };
-      //   try {
-      //     const response = await fetch("/areaCalculation", {
-      //       method: "POST",
-      //       headers: {
-      //         "Content-Type": "application/json",
-      //       },
-      //       body: JSON.stringify(dataToSend),
-      //     });
-
-      //     if (!response.ok) {
-      //       // Get the error message from server side and display to user
-      //       const errorData = await response.json();
-      //       console.log(errorData);
-      //     }
-
-      //     const responseData = await response.json();
-      //     // console.log(
-      //     //   "this is my area calculated by the server:",
-      //     //   responseData.area
-      //     // );
-      //     updateArea(index, responseData.area);
-      //     updateBaseline(responseData.baseline);
-      //     setXdataUpdated(responseData.times);
-      //     // Handle further processing based on the backend response
-      //   } catch (error) {
-      //     console.error("Error:", error);
-      //   }
-      // }
-    };
     makeRequest();
-  }, [clickCount,  baselineTimeRange.length]);
+  }, [clickCount, baselineTimeRange.length]);
 
   const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
   const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
