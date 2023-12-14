@@ -48,7 +48,6 @@ def baselineCorrection():
     try:
         # Retreive data from the POST request
         data = request.get_json()
-        print("this is the data we git from server:", data)
         # update the arrays to numpy so operation can be easier
         x_data = np.array(data.get("xData"))
         y_data = np.array(data.get("yData"))
@@ -62,8 +61,18 @@ def baselineCorrection():
             noise = y_data[noise_mask]
             spline = UnivariateSpline(noise_x, noise, k=1, s=1)
             baseline = spline(x_data)
+        # extract the time region
+        if "regionTime" in data:
+            region_time = data.get("regionTime")
+            min_time, max_time = region_time["min_time"], region_time["max_time"]
+        else:
+            min_time, max_time = baseline_time_ranges[0]["noise_start"], baseline_time_ranges[0]["noise_end"]
+        time_indices = [i for i, time in enumerate(
+            x_data) if min_time <= time <= max_time]
+        selected_times = x_data[time_indices]
+        corrected_baseline = baseline[time_indices]
         # Return baseline as a response from the POST request 
-        response = {"baseline": baseline.tolist()}
+        response = {"baseline": corrected_baseline.tolist(), "times": selected_times.tolist()}
         return jsonify(response), 200
 
     except Exception as e:
