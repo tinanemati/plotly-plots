@@ -118,7 +118,6 @@ export default function Heatmap({
   const handleClick = async (data) => {
     if (hoverActive) {
       const clickedPointIndex = data.points[0].pointIndex[0];
-      console.log("this is my m/z index:", clickedPointIndex);
       const yValue = arrayY[clickedPointIndex];
       updatehorizontalLinePosition(yValue);
       updateyData(arrayZ[clickedPointIndex]);
