@@ -10,13 +10,12 @@ export default function LinePlot({
   horizontalLinePosition,
   updateRegionData,
   updateBaseline,
-  updatedxData,
   regionData,
-  xDataUpdated,
 }) {
   const [hoverActive, setHoverActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [index, setIndex] = useState(0);
+  const [xDataUpdated, setXdataUpdated] = useState([]);
   const [range, setRange] = useState([]);
   // Function to update the range at a specific index
   const updateRange = (index, newLeft, newRight) => {
@@ -241,7 +240,7 @@ export default function LinePlot({
           );
           updateArea(index, responseData.area);
           updateBaseline(responseData.baseline);
-          updatedxData(responseData.times)
+          setXdataUpdated(responseData.times)
           // Handle further processing based on the backend response
         } catch (error) {
           console.error("Error:", error);
