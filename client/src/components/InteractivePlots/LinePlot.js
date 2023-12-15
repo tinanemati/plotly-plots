@@ -315,14 +315,14 @@ export default function LinePlot({
 
   // Either show raw data or corrected data based on baseline calculation
   var trace1 =
-    configValue === "Integration" 
+    configValue === "Integration" || configValue === "Scroll Zoom & Pan"
       ? {
           x: xData,
           y: yDataUpdated,
           name: `(m/z) slice baseline corrected`,
           type: "scatter",
           mode: "lines+markers",
-          marker: {size: 1},
+          marker: { size: 1 },
           line: {
             color: "#000",
             width: 1,
@@ -342,7 +342,7 @@ export default function LinePlot({
         };
   // Data that Shade the area between selected regions and baseline
   var trace2 =
-    range.lenght > 0 
+    range.lenght > 0
       ? range.map((item, index) => ({
           x: xData.slice(item.leftside, item.rightside),
           y: yDataUpdated.slice(item.leftside, item.rightside),
@@ -388,7 +388,8 @@ export default function LinePlot({
           shapes:
             baselineTimeRange.length === 0 &&
             sliceSelected &&
-            configValue !== "Integration"
+            configValue !== "Integration" &&
+            configValue !== "Scroll Zoom & Pan"
               ? [
                   {
                     type: "line",
@@ -408,7 +409,8 @@ export default function LinePlot({
               : sliceSelected &&
                 baselineTimeRange.length >= 2 &&
                 xDataUpdated.length > 0 &&
-                configValue !== "Integration"
+                configValue !== "Integration" &&
+                configValue !== "Scroll Zoom & Pan"
               ? [
                   {
                     type: "line",
