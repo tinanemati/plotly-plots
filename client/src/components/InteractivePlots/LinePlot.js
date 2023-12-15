@@ -88,8 +88,8 @@ export default function LinePlot({
           noiseEnd =
             Math.trunc(xDataUpdated[baseline.length - 1] * power) / power;
         } else {
-          noiseStart = start_time;
-          noiseEnd = end_time;
+          noiseStart = Math.trunc(xData[0] * power) / power;
+          noiseEnd = Math.trunc(xData[xData.length - 1] * power) / power;
         }
 
         const baselineTimes = `[${noiseStart} : ${noiseEnd}]`;
@@ -347,13 +347,13 @@ export default function LinePlot({
             ? range.map((item, index) => ({
                 x: xData.slice(item.leftside, item.rightside),
                 y: yData.slice(item.leftside, item.rightside),
-                xref: "y",
-                yref: "x",
                 type: "scatter",
                 mode: "lines",
                 line: {
                   color: "rgb(238,44,130)",
                 },
+                fill: "tozeroy",
+                fillcolor: "rgba(0, 0, 255, 0.3)", //Adjust the alpha value as needed
                 name: range[index] ? `Region ${index + 1}` : undefined,
               }))
             : []),
