@@ -9,6 +9,7 @@ export default function App() {
   const [regionData, setRegionData] = useState([]);
   const [horizontalLinePosition, setHorizontalLinePosition] = useState();
   const [sliceSelected, setSliceSelected] = useState(false);
+  const [baselineUpdated, setBaselineUpdated] = useState(false);
 
   const updatexData = (newData) => {
     setXdata(newData);
@@ -49,16 +50,19 @@ export default function App() {
         horizontalLinePosition={horizontalLinePosition}
         updatehorizontalLinePosition={updatehorizontalLinePosition}
         setSliceSelected={setSliceSelected}
+        setBaselineUpdated={setBaselineUpdated}
       />
       <LinePlot
         xData={xData}
         yData={yData}
         baseline={baseline}
         regionData={regionData}
+        baselineUpdated={baselineUpdated}
         sliceSelected={sliceSelected}
         horizontalLinePosition={horizontalLinePosition}
         updateRegionData={updateRegionData}
         updateBaseline={updateBaseline}
+        setBaselineUpdated={setBaselineUpdated}
       />
     </div>
   );

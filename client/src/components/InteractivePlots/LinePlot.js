@@ -12,12 +12,14 @@ export default function LinePlot({
   updateBaseline,
   regionData,
   sliceSelected,
+  baselineUpdated,
+  setBaselineUpdated
 }) {
   const [hoverActive, setHoverActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [index, setIndex] = useState(0);
   const [xDataUpdated, setXdataUpdated] = useState([]);
-  const [baselineUpdated, setBaselineUpdated] = useState(false);
+  const [calculate, setCalculate] = useState(false)
   const [range, setRange] = useState([]);
   // Function to update the range at a specific index
   const updateRange = (index, newLeft, newRight) => {
@@ -42,11 +44,11 @@ export default function LinePlot({
     setBaselineTimeRange(selectedTimes);
   };
   console.log("this is my range:", range);
-  // console.log("this is the baseline range we have:", baselineTimeRange);
-  // console.log("this is the points we have clicked:", pointClicked);
+  console.log("should we calculate:", calculate);
+  console.log("this is the baseline times:", baselineTimeRange);
   console.log("how many times i have been clicked:", clickCount);
-  //console.log("is hover active:", hoverActive);
-  console.log("area:", area);
+  console.log("has baseline been updated?", baselineUpdated);
+  //console.log("area:", area);
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -143,6 +145,8 @@ export default function LinePlot({
         setHoverActive(false); // after we get the second point stop listening for new points
         // Let's update the range here
         updateRange(index, leftside, clickPointIndex);
+        // checker for area calcution 
+        setCalculate(true)
       }
     }
   };
@@ -153,8 +157,8 @@ export default function LinePlot({
       : [...pointClicked, clickedPointIndex];
     setPointClicked(updatedClickedPoints);
     const xValue = xData[clickedPointIndex];
-    //console.log("onClick", data.points[0]);
     updateBaselineTimeRange(xValue);
+    setBaselineUpdated(false);
   };
   const handleDoubleClick = () => {
     setHoverActive(true);
@@ -185,8 +189,10 @@ export default function LinePlot({
 
       const responseData = await response.json();
       updateBaseline(responseData.baseline);
-      setBaselineUpdated(true);
       setXdataUpdated(responseData.times);
+      if (range.length > 0) {
+        setCalculate(true)
+      }
       console.log("I got response:", responseData);
     } catch (error) {
       console.error("Error:", error);
@@ -215,8 +221,9 @@ export default function LinePlot({
         "this is my area calculated by the server:",
         responseData.area
       );
+      setCalculate(false)
       console.log("request data:", requestData)
-      updateArea(index, responseData.area);
+      //updateArea(index, responseData.area);
       // Handle further processing based on the backend response
     } catch (error) {
       console.error("Error:", error);
@@ -226,7 +233,7 @@ export default function LinePlot({
   const baselineCorrection = () => {
     let dataToSend;
     // if user has selected some baseline point, perform basline fitting operation
-    if (baselineUpdated && baselineTimeRange.length >= 2) {
+    if (baselineTimeRange.length >= 2) {
       dataToSend = {
         xData: xData,
         yData: yData,
@@ -255,31 +262,29 @@ export default function LinePlot({
 
   // Hook that will update the baseline calculation accordingly
   useEffect(() => {
-    if (sliceSelected) {
+    if (sliceSelected && baselineUpdated === false) {
       baselineCorrection();
+      setBaselineUpdated(true)
     }
-  }, [baselineTimeRange.length, baselineUpdated, sliceSelected]);
+  }, [baselineUpdated, sliceSelected, baselineTimeRange.length]);
 
   // make request to the backend to calculate area
   const areaCalculation = () => {
-    let dataToSend;
-    if (clickCount === 2 && baselineUpdated) {
-      dataToSend = {
-        range: range[index],
+    const dataToSend = {
+        range: range,
         xData: xData,
         yData: yData,
         baseline: baseline,
       };
       performAreaCalculation(dataToSend);
-    }
-  };
+    };
 
   // Hook that will update the area calculation accordingly
   useEffect(() => {
-    if (sliceSelected) {
+    if (sliceSelected && calculate && baselineUpdated) {
       areaCalculation();
     }
-  }, [clickCount, sliceSelected]);
+  }, [baselineUpdated, sliceSelected, calculate]);
 
   const scrollZoom = configValue === "Scroll Zoom & Pan" ? true : false;
   const dragMode = configValue === "Scroll Zoom & Pan" ? "pan" : false;
@@ -354,7 +359,7 @@ export default function LinePlot({
           },
           dragmode: dragMode,
           shapes:
-            baselineTimeRange.length === 0 && baseline !== undefined
+            baselineTimeRange.length === 0  && sliceSelected
               ? [
                   {
                     type: "line",
@@ -371,7 +376,7 @@ export default function LinePlot({
                     },
                   },
                 ]
-              : baselineUpdated === true &&
+              : sliceSelected && 
                 baselineTimeRange.length >= 2 &&
                 xDataUpdated.length > 0
               ? [
@@ -400,9 +405,9 @@ export default function LinePlot({
         onClick={clickHandler}
         onDoubleClick={doubleClickHandler}
       />
-      <div style={{ height: "200px", width: "350px" }}>
+      {/* <div style={{ height: "200px", width: "350px" }}>
         <RegionTable regionData={regionData} />
-      </div>
+      </div> */}
     </div>
   );
 }

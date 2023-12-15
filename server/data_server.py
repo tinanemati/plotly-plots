@@ -92,21 +92,27 @@ def area():
         y_data = data.get("yData")
         baseline = data.get("baseline")
         range = data.get("range")
+        # area that will get return to client 
+        area = []
         # retreive slicing indecies from range 
-        leftside = range['leftside']
-        rightside = range['rightside']
-        # update the raw data according to baseline
-        y_data = y_data[leftside:rightside]
-        yDataRange = [y - b for y, b in zip(y_data, baseline)]
+        for peak in range:
+            peak_start, peak_end = peak["leftside"], peak["rightside"] 
+            print("peak_start", peak_start) 
+            print("peak_end", peak_end) 
+            # update the raw data according to baseline
+            y_data = y_data[peak_start:peak_end]
+            print("y_data", y_data)
+            yDataRange = [y - b for y, b in zip(y_data, baseline)]
         
-        # slice the x and y data axis given the left and right side keys
-        xDataRange = x_data[leftside:rightside]
-        #yDataRange = new_y_data[leftside:rightside]
-        # calulate the area given the updated yData
-        area = trapezoid(
-            y=yDataRange,
-            x=xDataRange
-        )
+            # slice the x data axis given the peak start and end index
+            xDataRange = x_data[peak_start:peak_end]
+            # calulate the area given the updated axis
+            peak_area = trapezoid(
+                y=yDataRange,
+                x=xDataRange
+            )
+            print("the peak area:", peak_area)
+            area.append(peak_area)
         response = {"area": area}
         return jsonify(response), 200
 
