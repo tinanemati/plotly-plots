@@ -81,23 +81,12 @@ export default function LinePlot({
         const calculatedArea = area[index].toFixed(5);
         const start_time = Math.trunc(xData[leftside] * power) / power;
         const end_time = Math.trunc(xData[rightside - 1] * power) / power;
-        const timeRange = `[${start_time} : ${end_time})`;
-        let noiseStart, noiseEnd;
-        if (baselineTimeRange.length >= 2) {
-          noiseStart = Math.trunc(xDataUpdated[0] * power) / power;
-          noiseEnd =
-            Math.trunc(xDataUpdated[baseline.length - 1] * power) / power;
-        } else {
-          noiseStart = Math.trunc(xData[0] * power) / power;
-          noiseEnd = Math.trunc(xData[xData.length - 1] * power) / power;
-        }
-
-        const baselineTimes = `[${noiseStart} : ${noiseEnd}]`;
+        const timeRange = `[${start_time} , ${end_time})`;
+        
         return {
           Name: regionName,
           Channel: channel,
           TimeRange: timeRange,
-          BaselineTimeRange: baselineTimes,
           CalculatedArea: calculatedArea,
         };
       });
@@ -417,7 +406,7 @@ export default function LinePlot({
         onClick={clickHandler}
         onDoubleClick={doubleClickHandler}
       />
-      <div style={{ height: "200px", width: "500px" }}>
+      <div style={{ height: "200px", width: "350px" }}>
         <RegionTable regionData={regionData} />
       </div>
     </div>

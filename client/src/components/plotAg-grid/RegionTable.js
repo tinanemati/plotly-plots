@@ -18,7 +18,6 @@ export default function RegionTable({ regionData }) {
       { field: "Name", width: 90 },
       { field: "Channel", width: 74 },
       { field: "TimeRange", headerName: "Time Range", width: 111 },
-      { field: "BaselineTimeRange", headerName: "Baseline Time Range", width: 150 },
       { field: "CalculatedArea", headerName: "Area", width: 80 },
     ],
   };
