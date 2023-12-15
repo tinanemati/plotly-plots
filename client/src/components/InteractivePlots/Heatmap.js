@@ -12,6 +12,7 @@ export default function Heatmap({
   updatehorizontalLinePosition,
   setSliceSelected,
   setBaselineUpdated,
+  setYdataUpdated,
 }) {
   const [arrayX, setArrayX] = useState([]);
   const [arrayY, setArrayY] = useState([]);
@@ -126,6 +127,7 @@ export default function Heatmap({
 
       const responseData = await response.json();
       updateBaseline(responseData.baseline);
+      setYdataUpdated(responseData.values)
     } catch (error) {
       console.error("Error:", error);
     }

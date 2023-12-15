@@ -309,6 +309,38 @@ export default function LinePlot({
   const markerSizes = xData.map((_, index) =>
     pointClicked.includes(index) ? 6 : 1
   );
+  //  Raw Data fetched from the server
+  var trace1 = {
+    x: xData,
+    y: yData,
+    name: `(m/z) slice`,
+    type: "scatter",
+    mode: "lines+markers",
+    marker: { color: markerColors, size: markerSizes },
+    line: {
+      color: "#000",
+      width: 1,
+    },
+  };
+  // Data that Shade the area between selected regions and baseline 
+  var trace2 =
+    range.lenght > 0
+      ? range.map((item, index) => ({
+          x: xData.slice(item.leftside, item.rightside),
+          y: yData.slice(item.leftside, item.rightside),
+          type: "scatter",
+          mode: "lines",
+          line: {
+            color: "rgb(238,44,130)",
+          },
+          fill: "tozeroy",
+          fillcolor: "rgba(0, 0, 255, 0.3)", // Adjust the alpha value as needed
+          name: range[index] ? `Region ${index + 1}` : undefined,
+        }))
+      : {};
+    const data = [trace1, trace2]
+  
+  
   return (
     <div
       className="lineplot-style"
@@ -322,34 +354,7 @@ export default function LinePlot({
         updateConfigValue={updateConfigValue}
       />
       <Plot
-        data={[
-          {
-            x: xData,
-            y: yData,
-            name: `(m/z) slice`,
-            type: "scatter",
-            mode: "lines+markers",
-            marker: { color: markerColors, size: markerSizes },
-            line: {
-              color: "#000",
-              width: 1,
-            },
-          },
-          ...(range.length > 0
-            ? range.map((item, index) => ({
-                x: xData.slice(item.leftside, item.rightside),
-                y: yData.slice(item.leftside, item.rightside),
-                type: "scatter",
-                mode: "lines",
-                line: {
-                  color: "rgb(238,44,130)",
-                },
-                fill: "tozeroy",
-                fillcolor: "rgba(0, 0, 255, 0.3)", //Adjust the alpha value as needed
-                name: range[index] ? `Region ${index + 1}` : undefined,
-              }))
-            : []),
-        ]}
+        data={data}
         layout={{
           width: 950,
           height: 570,
@@ -363,7 +368,9 @@ export default function LinePlot({
           },
           dragmode: dragMode,
           shapes:
-            baselineTimeRange.length === 0 && sliceSelected
+            baselineTimeRange.length === 0 &&
+            sliceSelected &&
+            configValue !== "Integration"
               ? [
                   {
                     type: "line",
@@ -382,7 +389,8 @@ export default function LinePlot({
                 ]
               : sliceSelected &&
                 baselineTimeRange.length >= 2 &&
-                xDataUpdated.length > 0
+                xDataUpdated.length > 0 &&
+                configValue !== "Integration"
               ? [
                   {
                     type: "line",

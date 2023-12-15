@@ -70,10 +70,14 @@ def baselineCorrection():
         time_indices = [i for i, time in enumerate(
             x_data) if min_time <= time <= max_time]
         selected_times = x_data[time_indices]
+        updated_y_data = y_data - baseline
         corrected_baseline = baseline[time_indices]
+        print("updated:", updated_y_data)
+        print("updated lenght:", updated_y_data.shape)
         # Return baseline as a response from the POST request
         response = {"baseline": corrected_baseline.tolist(),
-                    "times": selected_times.tolist()}
+                    "times": selected_times.tolist(), 
+                    "values": updated_y_data.tolist()}
         return jsonify(response), 200
 
     except Exception as e:
