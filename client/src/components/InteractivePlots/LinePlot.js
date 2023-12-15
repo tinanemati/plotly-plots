@@ -29,12 +29,7 @@ export default function LinePlot({
   };
   const [leftside, setLeftside] = useState(0);
   const [area, setArea] = useState([]);
-  // Function to update the area at a specific index
-  const updateArea = (index, newArea) => {
-    const updatedareas = [...area];
-    updatedareas[index] = { calculatedArea: newArea };
-    setArea(updatedareas);
-  };
+
   const [baselineTimeRange, setBaselineTimeRange] = useState([]);
   const [pointClicked, setPointClicked] = useState([]);
   // Function that will update the baseline range
@@ -44,12 +39,12 @@ export default function LinePlot({
     setBaselineTimeRange(selectedTimes);
   };
   console.log("this is my range:", range);
-  console.log("should we calculate:", calculate);
   console.log("area:", area);
-  console.log("this is the baseline times:", baselineTimeRange);
+  console.log("should we calculate:", calculate);
+  // console.log("this is the baseline times:", baselineTimeRange);
   console.log("how many times i have been clicked:", clickCount);
   console.log("has baseline been updated?", baselineUpdated);
-  //console.log("area:", area);
+  console.log("can i hover:", hoverActive);
   const [configValue, setConfigValue] = useState("Scroll Zoom & Pan");
   const updateConfigValue = (newValue) => {
     setConfigValue(newValue);
@@ -83,7 +78,7 @@ export default function LinePlot({
         const channel = "MS 1";
         const power = Math.pow(10, 3);
         const { leftside, rightside } = item;
-        const calculatedArea = area[index].calculatedArea.toFixed(5);
+        const calculatedArea = area[index].toFixed(5);
         const start_time = Math.trunc(xData[leftside] * power) / power;
         const end_time = Math.trunc(xData[rightside - 1] * power) / power;
         const timeRange = `[${start_time} : ${end_time})`;
@@ -124,6 +119,12 @@ export default function LinePlot({
   };
 
   const handleClickIntegration = (data) => {
+    if (
+      range.length > 0 &&
+      data.points[0].x === xData[range[index].rightside - 1]
+    ) {
+      setHoverActive(true)
+    }
     if (hoverActive) {
       // check if we currently have any regions and the point that was clicked is the same as the rightside
       if (
@@ -223,7 +224,7 @@ export default function LinePlot({
       );
       setCalculate(false);
       console.log("request data:", requestData);
-      updateArea(index, responseData.area);
+      setArea(responseData.area);
       // Handle further processing based on the backend response
     } catch (error) {
       console.error("Error:", error);
@@ -405,9 +406,9 @@ export default function LinePlot({
         onClick={clickHandler}
         onDoubleClick={doubleClickHandler}
       />
-      {/* <div style={{ height: "200px", width: "350px" }}>
+      <div style={{ height: "200px", width: "350px" }}>
         <RegionTable regionData={regionData} />
-      </div> */}
+      </div>
     </div>
   );
 }
