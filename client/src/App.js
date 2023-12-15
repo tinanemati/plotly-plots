@@ -32,6 +32,7 @@ export default function App() {
   };
   
   console.log("this is my yData updated", yDataUpdated)
+  console.log("this is my yData", yData)
   /* Testing
   console.log("picked a slice: ", sliceSelected)
   console.log("this is my xData for line plotL: ", xData)

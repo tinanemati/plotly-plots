@@ -14,6 +14,8 @@ export default function LinePlot({
   sliceSelected,
   baselineUpdated,
   setBaselineUpdated,
+  yDataUpdated,
+  setYdataUpdated,
 }) {
   const [hoverActive, setHoverActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
@@ -192,6 +194,7 @@ export default function LinePlot({
       const responseData = await response.json();
       updateBaseline(responseData.baseline);
       setXdataUpdated(responseData.times);
+      setYdataUpdated(responseData.values);
       if (range.length > 0) {
         setCalculate(true);
       }
@@ -309,25 +312,40 @@ export default function LinePlot({
   const markerSizes = xData.map((_, index) =>
     pointClicked.includes(index) ? 6 : 1
   );
-  //  Raw Data fetched from the server
-  var trace1 = {
-    x: xData,
-    y: yData,
-    name: `(m/z) slice`,
-    type: "scatter",
-    mode: "lines+markers",
-    marker: { color: markerColors, size: markerSizes },
-    line: {
-      color: "#000",
-      width: 1,
-    },
-  };
-  // Data that Shade the area between selected regions and baseline 
+
+  // Either show raw data or corrected data based on baseline calculation
+  var trace1 =
+    configValue === "Integration" 
+      ? {
+          x: xData,
+          y: yDataUpdated,
+          name: `(m/z) slice baseline corrected`,
+          type: "scatter",
+          mode: "lines+markers",
+          marker: {size: 1},
+          line: {
+            color: "#000",
+            width: 1,
+          },
+        }
+      : {
+          x: xData,
+          y: yData,
+          name: `(m/z) slice`,
+          type: "scatter",
+          mode: "lines+markers",
+          marker: { color: markerColors, size: markerSizes },
+          line: {
+            color: "#000",
+            width: 1,
+          },
+        };
+  // Data that Shade the area between selected regions and baseline
   var trace2 =
-    range.lenght > 0
+    range.lenght > 0 
       ? range.map((item, index) => ({
           x: xData.slice(item.leftside, item.rightside),
-          y: yData.slice(item.leftside, item.rightside),
+          y: yDataUpdated.slice(item.leftside, item.rightside),
           type: "scatter",
           mode: "lines",
           line: {
@@ -338,9 +356,9 @@ export default function LinePlot({
           name: range[index] ? `Region ${index + 1}` : undefined,
         }))
       : {};
-    const data = [trace1, trace2]
-  
-  
+
+  const data = [trace1, trace2];
+
   return (
     <div
       className="lineplot-style"
