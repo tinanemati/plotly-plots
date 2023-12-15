@@ -97,12 +97,9 @@ def area():
         # retreive slicing indecies from range 
         for peak in range:
             peak_start, peak_end = peak["leftside"], peak["rightside"] 
-            print("peak_start", peak_start) 
-            print("peak_end", peak_end) 
             # update the raw data according to baseline
-            y_data = y_data[peak_start:peak_end]
-            print("y_data", y_data)
-            yDataRange = [y - b for y, b in zip(y_data, baseline)]
+            new_y_data = y_data[peak_start:peak_end]
+            yDataRange = [y - b for y, b in zip(new_y_data, baseline)]
         
             # slice the x data axis given the peak start and end index
             xDataRange = x_data[peak_start:peak_end]
