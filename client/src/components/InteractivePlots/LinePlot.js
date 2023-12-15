@@ -343,7 +343,7 @@ export default function LinePlot({
                 line: {
                   color: "rgb(238,44,130)",
                 },
-                name: area && area[index] ? `Region ${index + 1}` : undefined,
+                name: range[index] ? `Region ${index + 1}` : undefined,
               }))
             : []),
         ]}
