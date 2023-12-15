@@ -13,13 +13,13 @@ export default function LinePlot({
   regionData,
   sliceSelected,
   baselineUpdated,
-  setBaselineUpdated
+  setBaselineUpdated,
 }) {
   const [hoverActive, setHoverActive] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [index, setIndex] = useState(0);
   const [xDataUpdated, setXdataUpdated] = useState([]);
-  const [calculate, setCalculate] = useState(false)
+  const [calculate, setCalculate] = useState(false);
   const [range, setRange] = useState([]);
   // Function to update the range at a specific index
   const updateRange = (index, newLeft, newRight) => {
@@ -145,8 +145,8 @@ export default function LinePlot({
         setHoverActive(false); // after we get the second point stop listening for new points
         // Let's update the range here
         updateRange(index, leftside, clickPointIndex);
-        // checker for area calcution 
-        setCalculate(true)
+        // checker for area calcution
+        setCalculate(true);
       }
     }
   };
@@ -191,7 +191,7 @@ export default function LinePlot({
       updateBaseline(responseData.baseline);
       setXdataUpdated(responseData.times);
       if (range.length > 0) {
-        setCalculate(true)
+        setCalculate(true);
       }
       console.log("I got response:", responseData);
     } catch (error) {
@@ -200,7 +200,6 @@ export default function LinePlot({
   };
   // Function for area calculation
   const performAreaCalculation = async (requestData) => {
-   
     try {
       const response = await fetch("/area", {
         method: "POST",
@@ -221,8 +220,8 @@ export default function LinePlot({
         "this is my area calculated by the server:",
         responseData.area
       );
-      setCalculate(false)
-      console.log("request data:", requestData)
+      setCalculate(false);
+      console.log("request data:", requestData);
       //updateArea(index, responseData.area);
       // Handle further processing based on the backend response
     } catch (error) {
@@ -264,20 +263,20 @@ export default function LinePlot({
   useEffect(() => {
     if (sliceSelected && baselineUpdated === false) {
       baselineCorrection();
-      setBaselineUpdated(true)
+      setBaselineUpdated(true);
     }
   }, [baselineUpdated, sliceSelected, baselineTimeRange.length]);
 
   // make request to the backend to calculate area
   const areaCalculation = () => {
     const dataToSend = {
-        range: range,
-        xData: xData,
-        yData: yData,
-        baseline: baseline,
-      };
-      performAreaCalculation(dataToSend);
+      range: range,
+      xData: xData,
+      yData: yData,
+      baseline: baseline,
     };
+    performAreaCalculation(dataToSend);
+  };
 
   // Hook that will update the area calculation accordingly
   useEffect(() => {
@@ -359,7 +358,7 @@ export default function LinePlot({
           },
           dragmode: dragMode,
           shapes:
-            baselineTimeRange.length === 0  && sliceSelected
+            baselineTimeRange.length === 0 && sliceSelected
               ? [
                   {
                     type: "line",
@@ -376,7 +375,7 @@ export default function LinePlot({
                     },
                   },
                 ]
-              : sliceSelected && 
+              : sliceSelected &&
                 baselineTimeRange.length >= 2 &&
                 xDataUpdated.length > 0
               ? [
