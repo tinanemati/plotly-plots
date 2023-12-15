@@ -45,6 +45,7 @@ export default function LinePlot({
   };
   console.log("this is my range:", range);
   console.log("should we calculate:", calculate);
+  console.log("area:", area);
   console.log("this is the baseline times:", baselineTimeRange);
   console.log("how many times i have been clicked:", clickCount);
   console.log("has baseline been updated?", baselineUpdated);
@@ -222,7 +223,7 @@ export default function LinePlot({
       );
       setCalculate(false);
       console.log("request data:", requestData);
-      //updateArea(index, responseData.area);
+      updateArea(index, responseData.area);
       // Handle further processing based on the backend response
     } catch (error) {
       console.error("Error:", error);
