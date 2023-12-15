@@ -72,7 +72,7 @@ export default function LinePlot({
   }, [configValue]);
 
   useEffect(() => {
-    if (area.length > 0) {
+    if (area && area.length > 0 ) {
       const updatedRegions = range.map((item, index) => {
         const regionName = `Region ${index + 1}`;
         const channel = "MS 1";
@@ -343,7 +343,7 @@ export default function LinePlot({
                 line: {
                   color: "rgb(238,44,130)",
                 },
-                name: area[index] ? `Region ${index + 1}` : undefined,
+                name: area && area[index] ? `Region ${index + 1}` : undefined,
               }))
             : []),
         ]}
