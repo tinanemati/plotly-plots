@@ -72,28 +72,39 @@ export default function LinePlot({
   }, [configValue]);
 
   useEffect(() => {
-    if (area && area.length > 0 ) {
+    if (area && area.length > 0) {
       const updatedRegions = range.map((item, index) => {
         const regionName = `Region ${index + 1}`;
-        const channel = "MS 1";
+        const channel = "UV";
         const power = Math.pow(10, 3);
         const { leftside, rightside } = item;
         const calculatedArea = area[index].toFixed(5);
         const start_time = Math.trunc(xData[leftside] * power) / power;
         const end_time = Math.trunc(xData[rightside - 1] * power) / power;
         const timeRange = `[${start_time} : ${end_time})`;
+        let noiseStart, noiseEnd;
+        if (baselineTimeRange.length >= 2) {
+          noiseStart = Math.trunc(xDataUpdated[0] * power) / power;
+          noiseEnd =
+            Math.trunc(xDataUpdated[baseline.length - 1] * power) / power;
+        } else {
+          noiseStart = start_time;
+          noiseEnd = end_time;
+        }
 
+        const baselineTimes = `[${noiseStart} : ${noiseEnd}]`;
         return {
           Name: regionName,
           Channel: channel,
           TimeRange: timeRange,
+          BaselineTimeRange: baselineTimes,
           CalculatedArea: calculatedArea,
         };
       });
 
       updateRegionData(updatedRegions);
     }
-  }, [area]);
+  }, [area, xDataUpdated]);
 
   // Reset the setting when we selecet a new slice and table data gets updated
   useEffect(() => {
@@ -123,7 +134,7 @@ export default function LinePlot({
       range.length > 0 &&
       data.points[0].x === xData[range[index].rightside - 1]
     ) {
-      setHoverActive(true)
+      setHoverActive(true);
     }
     if (hoverActive) {
       // check if we currently have any regions and the point that was clicked is the same as the rightside
@@ -406,7 +417,7 @@ export default function LinePlot({
         onClick={clickHandler}
         onDoubleClick={doubleClickHandler}
       />
-      <div style={{ height: "200px", width: "350px" }}>
+      <div style={{ height: "200px", width: "500px" }}>
         <RegionTable regionData={regionData} />
       </div>
     </div>
