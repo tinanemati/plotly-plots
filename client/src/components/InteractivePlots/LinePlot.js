@@ -82,7 +82,7 @@ export default function LinePlot({
         const start_time = Math.trunc(xData[leftside] * power) / power;
         const end_time = Math.trunc(xData[rightside - 1] * power) / power;
         const timeRange = `[${start_time} , ${end_time})`;
-        
+
         return {
           Name: regionName,
           Channel: channel,
@@ -306,6 +306,9 @@ export default function LinePlot({
     pointClicked.includes(index) ? "#fe0000" : "#000"
   );
 
+  const markerSizes = xData.map((_, index) =>
+    pointClicked.includes(index) ? 6 : 1
+  );
   return (
     <div
       className="lineplot-style"
@@ -326,7 +329,7 @@ export default function LinePlot({
             name: `(m/z) slice`,
             type: "scatter",
             mode: "lines+markers",
-            marker: { color: markerColors, size: 3 },
+            marker: { color: markerColors, size: markerSizes },
             line: {
               color: "#000",
               width: 1,
