@@ -72,8 +72,6 @@ def baselineCorrection():
         selected_times = x_data[time_indices]
         updated_y_data = y_data - baseline
         corrected_baseline = baseline[time_indices]
-        print("updated:", updated_y_data)
-        print("updated lenght:", updated_y_data.shape)
         # Return baseline as a response from the POST request
         response = {"baseline": corrected_baseline.tolist(),
                     "times": selected_times.tolist(), 
@@ -94,19 +92,15 @@ def area():
         # update the arrays to numpy so operation can be easier
         x_data = data.get("xData")
         y_data = data.get("yData")
-        baseline = data.get("baseline")
         range = data.get("range")
         # area that will get return to client 
         area = []
         # retreive slicing indecies from range 
         for peak in range:
             peak_start, peak_end = peak["leftside"], peak["rightside"] 
-            # update the raw data according to baseline
-            new_y_data = y_data[peak_start:peak_end]
-            yDataRange = [y - b for y, b in zip(new_y_data, baseline)]
-        
-            # slice the x data axis given the peak start and end index
+            # slice the x,y data axis given the peak start and end index
             xDataRange = x_data[peak_start:peak_end]
+            yDataRange = y_data[peak_start:peak_end]
             # calulate the area given the updated axis
             peak_area = trapezoid(
                 y=yDataRange,
