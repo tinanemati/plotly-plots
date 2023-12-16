@@ -311,57 +311,6 @@ export default function LinePlot({
   const markerSizes = xData.map((_, index) =>
     pointClicked.includes(index) ? 6 : 1
   );
-  // const [trace2, setTrace2] = useState([]);
-  // // Either show raw data or corrected data based on baseline calculation
-  // var trace1 =
-  //   configValue === "Integration" || configValue === "Scroll Zoom & Pan"
-  //     ? {
-  //         x: xData,
-  //         y: yDataUpdated,
-  //         name: `(m/z) slice`,
-  //         type: "scatter",
-  //         mode: "lines+markers",
-  //         marker: { size: 1 },
-  //         line: {
-  //           color: "#000",
-  //           width: 1,
-  //         },
-  //       }
-  //     : {
-  //         x: xData,
-  //         y: yData,
-  //         name: `(m/z) slice`,
-  //         type: "scatter",
-  //         mode: "lines+markers",
-  //         marker: { color: markerColors, size: markerSizes },
-  //         line: {
-  //           color: "#000",
-  //           width: 1,
-  //         },
-  //       };
-  // // Data that Shade the area between selected regions and baseline
-  // useEffect(() => {
-  //   if (range.length > 0 && xData.length > 0 && yDataUpdated.length > 0) {
-  //     const newTrace2 = range.map((item, index) => ({
-  //       x: xData.slice(item.leftside, item.rightside),
-  //       y: yDataUpdated.slice(item.leftside, item.rightside),
-  //       type: "scatter",
-  //       mode: "lines",
-  //       line: {
-  //         color: "rgb(238,44,130)",
-  //       },
-  //       fill: "tozeroy",
-  //       fillcolor: "rgba(0, 0, 255, 0.3)",
-  //       name: range[index] ? `Region ${index + 1}` : undefined,
-  //     }));
-  //     setTrace2(newTrace2);
-  //   } else {
-  //     setTrace2([]);
-  //   }
-  // }, [range.length]);
-
-  // console.log("trace 2:", trace2);
-  //const data = [trace1, ...trace2];
 
   return (
     <div
@@ -384,7 +333,7 @@ export default function LinePlot({
                 ? yDataUpdated
                 : configValue === 'Scroll Zoom & Pan'
                 ? yDataUpdated
-                : yData, // Define your yData condition here for other cases
+                : yData, 
             name: `(m/z) slice`,
             type: 'scatter',
             mode: 'lines+markers',
